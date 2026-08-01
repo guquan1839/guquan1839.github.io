@@ -77,125 +77,51 @@
             display: block;
         }
 
-        /* ========== Pet Widget (Cat) ========== */
-        .pet {
-            position: fixed;
-            left: 26px;
-            bottom: 18px;
-            width: 124px;
-            height: 136px;
-            z-index: 101;
-            cursor: pointer;
-            user-select: none;
-            transform-origin: 50% 100%;
-            animation: pet-enter 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        /* ========== Visitor World Map ========== */
+        #visitor-map {
+            width: 100%;
+            height: 300px;
+            background: transparent;
         }
-        @keyframes pet-enter {
-            from { transform: translateY(50px) scale(0.5); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
+        [data-theme="dark"] #visitor-map { background: transparent; }
+        #visitor-map svg { display: block; width: 100% !important; height: 100% !important; }
+        /* region styling */
+        #visitor-map .jvm-region,
+        #visitor-map path.jvm-region { fill: #eef0f4; stroke: #dfe3ea; stroke-width: 0.5; }
+        [data-theme="dark"] #visitor-map .jvm-region,
+        [data-theme="dark"] #visitor-map path.jvm-region { fill: #1f2937; stroke: #374151; }
+        /* glowing pulsing marker (visitor dot) */
+        #visitor-map circle.jvm-marker,
+        #visitor-map circle {
+            filter: drop-shadow(0 0 5px rgba(255, 93, 122, 0.85));
+            animation: vmap-pulse 1.8s ease-in-out infinite;
         }
-        .pet-cat {
-            width: 100%; height: 100%;
-            overflow: visible;
-            display: block;
-            animation: pet-breathe 3.6s ease-in-out infinite;
+        @keyframes vmap-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.45; }
         }
-        @keyframes pet-breathe {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-2px); }
+        .visitor-loc {
+            margin-top: 18px;
+            text-align: center;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
-        .pet-shadow {
-            position: absolute;
-            left: 50%; bottom: -4px;
-            transform: translateX(-50%);
-            width: 84px; height: 13px;
-            background: rgba(0,0,0,0.18);
-            border-radius: 50%;
-            filter: blur(5px);
-            animation: pet-shadow 3.6s ease-in-out infinite;
-            pointer-events: none;
+        .visitor-loc .v-loc {
+            color: var(--accent);
+            font-weight: 600;
         }
-        @keyframes pet-shadow {
-            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.20; }
-            50% { transform: translateX(-50%) scale(0.88); opacity: 0.12; }
-        }
-        /* cat parts */
-        .cat-body { fill: #efe6df; stroke: #b9a89c; stroke-width: 3; }
-        .cat-belly { fill: #fbf7f3; }
-        .cat-paw { fill: #e2d5cb; stroke: #b9a89c; stroke-width: 3; }
-        .cat-head { fill: #efe6df; stroke: #b9a89c; stroke-width: 3; }
-        .cat-ear { fill: #efe6df; stroke: #b9a89c; stroke-width: 3; stroke-linejoin: round; }
-        .cat-ear-inner { fill: #f7b9c4; }
-        .cat-tail { fill: #efe6df; stroke: #b9a89c; stroke-width: 3; stroke-linejoin: round; }
-        .pet-cheek { fill: #f7a8bd; opacity: 0.55; }
-        .eye-white { fill: #ffffff; stroke: #2b2b2b; stroke-width: 2.5; }
-        .pupil { fill: #181818; }
-        .pupil-shine { fill: #ffffff; }
-        .muzzle { fill: #fbf7f3; stroke: #c9b6a6; stroke-width: 2; }
-        .nose { fill: #f29dad; stroke: #d97b8f; stroke-width: 1.5; stroke-linejoin: round; }
-        .mouth { fill: none; stroke: #8a6d5b; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-        .whisker { fill: none; stroke: #9a8676; stroke-width: 1.6; stroke-linecap: round; }
-        .eye { transform-box: fill-box; transform-origin: center; }
-        .pet.blink .eye { animation: blink 0.16s ease-in-out; }
-        @keyframes blink {
-            0%, 100% { transform: scaleY(1); }
-            50% { transform: scaleY(0.08); }
-        }
-        .pet.hop { animation: pet-hop 0.6s ease-out; }
-        @keyframes pet-hop {
-            0% { transform: translateY(0); }
-            40% { transform: translateY(-26px); }
-            100% { transform: translateY(0); }
-        }
-        /* speech bubble */
-        .pet-speech {
-            position: absolute;
-            left: 50%; top: -10px;
-            transform: translate(-50%, -100%);
-            background: #ffffff;
-            color: #1a1a1a;
-            border: 1.5px solid var(--border);
-            border-radius: 14px;
-            padding: 5px 12px;
-            font-size: 13px;
-            white-space: nowrap;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.14);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.22s ease, transform 0.22s ease;
-            font-family: "Inter", "Noto Sans SC", sans-serif;
-        }
-        .pet-speech.show {
-            opacity: 1;
-            transform: translate(-50%, -115%);
-        }
-        .pet-speech::after {
-            content: '';
-            position: absolute;
-            left: 50%; bottom: -7px;
-            width: 0; height: 0;
-            transform: translateX(-50%);
-            border: 7px solid transparent;
-            border-top-color: #ffffff;
-            border-bottom: 0;
-        }
-        /* heart effect */
-        .heart-fx {
-            position: absolute;
-            left: 50%; top: 6px;
-            transform: translateX(-50%);
-            font-size: 20px;
-            color: #ff5d7a;
-            opacity: 0;
-            pointer-events: none;
-        }
-        .heart-fx.show {
-            animation: heart-pop 0.9s ease-out forwards;
-        }
-        @keyframes heart-pop {
-            0% { transform: translate(-50%, 0) scale(0.4); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translate(-50%, -64px) scale(1.3); opacity: 0; }
+        .visitor-loc .v-ip {
+            font-family: "JetBrains Mono", "SF Mono", monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: var(--bg-secondary);
+            padding: 2px 10px;
+            border-radius: 12px;
         }
 
         /* ========== Layout ========== */
@@ -725,7 +651,7 @@
         .back-to-top {
             position: fixed;
             bottom: 28px;
-            right: 28px;
+            left: 28px;
             width: 44px; height: 44px;
             border-radius: 50%;
             background: var(--card);
@@ -767,62 +693,13 @@
             section { margin: 32px 0; }
         }
     </style>
+    <!-- jsVectorMap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.7.0/dist/jsvectormap.min.css">
 </head>
 <body>
 
     <!-- ========== Animated Particle Background ========== -->
     <canvas id="particle-canvas"></canvas>
-
-    <!-- ========== Pet Widget (Cat) ========== -->
-    <div class="pet" id="pet" role="button" aria-label="Pet cat" title="摸摸我~">
-        <div class="pet-speech" id="petSpeech">喵～</div>
-        <div class="heart-fx" id="petHeart"></div>
-        <div class="pet-shadow"></div>
-        <svg class="pet-cat" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <!-- tail -->
-            <path class="cat-tail" d="M132 168 C178 158 186 116 166 98 C161 93 154 97 158 104 C172 122 168 150 132 168 Z"/>
-            <!-- body -->
-            <ellipse class="cat-body" cx="100" cy="162" rx="60" ry="52"/>
-            <!-- belly -->
-            <ellipse class="cat-belly" cx="100" cy="174" rx="40" ry="34"/>
-            <!-- paws -->
-            <ellipse class="cat-paw" cx="80" cy="202" rx="17" ry="12"/>
-            <ellipse class="cat-paw" cx="120" cy="202" rx="17" ry="12"/>
-            <!-- head -->
-            <ellipse class="cat-head" cx="100" cy="96" rx="52" ry="47"/>
-            <!-- ears -->
-            <path class="cat-ear" d="M56 70 L46 30 L92 60 Z"/>
-            <path class="cat-ear" d="M144 70 L154 30 L108 60 Z"/>
-            <path class="cat-ear-inner" d="M64 62 L58 42 L84 58 Z"/>
-            <path class="cat-ear-inner" d="M136 62 L142 42 L118 58 Z"/>
-            <!-- cheeks -->
-            <ellipse class="pet-cheek" cx="68" cy="112" rx="10" ry="6"/>
-            <ellipse class="pet-cheek" cx="132" cy="112" rx="10" ry="6"/>
-            <!-- eyes -->
-            <g class="eye" id="eyeL">
-                <ellipse class="eye-white" cx="80" cy="96" rx="12" ry="15"/>
-                <g class="eyeball" id="eyeballL">
-                    <circle class="pupil" cx="80" cy="96" r="7"/>
-                    <circle class="pupil-shine" cx="77" cy="92" r="2.2"/>
-                </g>
-            </g>
-            <g class="eye" id="eyeR">
-                <ellipse class="eye-white" cx="120" cy="96" rx="12" ry="15"/>
-                <g class="eyeball" id="eyeballR">
-                    <circle class="pupil" cx="120" cy="96" r="7"/>
-                    <circle class="pupil-shine" cx="117" cy="92" r="2.2"/>
-                </g>
-            </g>
-            <!-- muzzle -->
-            <ellipse class="muzzle" cx="100" cy="124" rx="24" ry="15"/>
-            <!-- nose -->
-            <path class="nose" d="M94 114 L106 114 L100 120 Z"/>
-            <!-- mouth -->
-            <path class="mouth" d="M100 120 L100 128 M100 128 Q92 134 84 128 M100 128 Q108 134 116 128"/>
-            <!-- whiskers -->
-            <path class="whisker" d="M70 122 L40 118 M70 126 L38 128 M130 122 L160 118 M130 126 L162 128"/>
-        </svg>
-    </div>
 
     <!-- ========== Navigation Bar ========== -->
     <nav class="navbar">
@@ -1020,6 +897,22 @@
             </div>
         </section>
 
+        <!-- ========== VISITOR MAP ========== -->
+        <section id="visitors">
+            <div class="section-header">
+                <div class="icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <h2><span class="en-text">Visitor Map</span><span class="zh-text">访客地图</span></h2>
+            </div>
+            <div class="card">
+                <div id="visitor-map"></div>
+                <p class="visitor-loc" id="visitor-loc">
+                    <span class="en-text">📍 Locating current visitor…</span><span class="zh-text">📍 正在定位当前访客…</span>
+                </p>
+            </div>
+        </section>
+
         <!-- ========== FOOTER ========== -->
         <footer>
             <p><span class="en-text">&copy; 2026 Gu Quan · Built with </span><span class="zh-text">&copy; 2026 谷权 · 由 </span><span class="heart">❤️</span><span class="en-text"> · Powered by GitHub Pages</span><span class="zh-text"> 构建 · 基于 GitHub Pages</span></p>
@@ -1188,84 +1081,75 @@
             resize();
             draw();
         })();
+    </script>
 
-        // ========== Tail Sway (SVG, robust across browsers) ==========
-        (function(){
-            const tail = document.querySelector('.cat-tail');
-            if (!tail) return;
-            let t = 0;
-            (function loop(){
-                t += 0.02;
-                const angle = Math.sin(t) * 11.5 + 1.5;
-                tail.setAttribute('transform', 'rotate(' + angle.toFixed(2) + ' 150 168)');
-                requestAnimationFrame(loop);
-            })();
-        })();
-
-        // ========== Pet Widget Interaction ==========
-        (function(){
-            const pet = document.getElementById('pet');
-            const eyeballL = document.getElementById('eyeballL');
-            const eyeballR = document.getElementById('eyeballR');
-            const petSpeech = document.getElementById('petSpeech');
-            const petHeart = document.getElementById('petHeart');
-            if (!pet) return;
-
-            const eyes = [
-                { el: eyeballL, cx: 80, cy: 96 },
-                { el: eyeballR, cx: 120, cy: 96 }
-            ];
-            function movePupils(mx, my){
-                const rect = pet.getBoundingClientRect();
-                if (rect.width === 0) return;
-                eyes.forEach(e => {
-                    if (!e.el) return;
-                    const ox = rect.left + (e.cx / 200) * rect.width;
-                    const oy = rect.top + (e.cy / 220) * rect.height;
-                    const dx = mx - ox, dy = my - oy;
-                    const len = Math.hypot(dx, dy);
-                    const max = 4.5;
-                    let sx = 0, sy = 0;
-                    if (len > 0){
-                        sx = (dx / len) * max;
-                        sy = (dy / len) * Math.min(max, 3.2);
-                    }
-                    e.el.setAttribute('transform', 'translate(' + sx.toFixed(2) + ',' + sy.toFixed(2) + ')');
-                });
+    <!-- ========== jsVectorMap + World Map + Visitor geolocation ========== -->
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.7.0/dist/jsvectormap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.7.0/dist/maps/world.js"></script>
+    <script>
+        (function () {
+            function renderMap(markers, html) {
+                var loc = document.getElementById('visitor-loc');
+                if (loc) loc.innerHTML = html;
+                if (typeof jsVectorMap === 'undefined') return;
+                try {
+                    new jsVectorMap({
+                        selector: '#visitor-map',
+                        map: 'world',
+                        backgroundColor: 'transparent',
+                        regionStyle: {
+                            initial: { fill: '#eef0f4', stroke: '#dfe3ea', 'stroke-width': 0.5 },
+                            hover: { fill: '#dde3ed' }
+                        },
+                        regionLabelStyle: { initial: { fill: '#000' } },
+                        markers: markers,
+                        markerStyle: {
+                            initial: {
+                                fill: '#ff5d7a',
+                                stroke: '#ffffff',
+                                'stroke-width': 2,
+                                r: 6
+                            },
+                            hover: { fill: '#e23460' }
+                        },
+                        labels: { markers: { render: function (e) { return e.name; } } },
+                        zoomOnScroll: false,
+                        zoomButtons: false,
+                        panOnDrag: false
+                    });
+                } catch (err) {
+                    console.warn('Visitor map init failed:', err);
+                }
             }
-            window.addEventListener('pointermove', e => movePupils(e.clientX, e.clientY));
 
-            function blink(){
-                pet.classList.add('blink');
-                setTimeout(() => pet.classList.remove('blink'), 170);
-            }
-            setInterval(() => { if (Math.random() < 0.75) blink(); }, 3600);
+            var zh = document.documentElement.getAttribute('lang') === 'zh-CN';
 
-            let speechTimer = null;
-            function showSpeech(text, ms){
-                petSpeech.textContent = text;
-                petSpeech.classList.add('show');
-                clearTimeout(speechTimer);
-                speechTimer = setTimeout(() => petSpeech.classList.remove('show'), ms || 2200);
+            // Fallback dot: none
+            function fail() {
+                renderMap([], zh
+                    ? '📍 暂时无法获取访客位置（可能被网络拦截）'
+                    : '📍 Visitor location unavailable (blocked by network)');
             }
-            const idlePhrases = ['喵～','喵呜~','求撸！','咕咕?','点我有惊喜','(=^･ω･^=)','别盯着我看啦','今天也很可爱','摸摸我吧','Meow~'];
-            setInterval(() => { if (Math.random() < 0.5) showSpeech(idlePhrases[Math.floor(Math.random()*idlePhrases.length)]); }, 11000);
 
-            function showHeart(){
-                petHeart.textContent = '❤';
-                petHeart.classList.remove('show');
-                void petHeart.offsetWidth;
-                petHeart.classList.add('show');
-            }
-            pet.addEventListener('click', () => {
-                pet.classList.remove('hop');
-                void pet.offsetWidth;
-                pet.classList.add('hop');
-                showHeart();
-                showSpeech(['喵！','喵喵~','呼噜呼噜~','再摸摸~','喵呜!'][Math.floor(Math.random()*5)], 1700);
-            });
+            fetch('https://ipwho.is/')
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                    if (!d || d.success === false || d.latitude == null || d.longitude == null) return fail();
+                    var place = [d.city, d.country].filter(Boolean).join(', ') || d.country || '';
+                    var name = place || d.ip;
+                    renderMap(
+                        [{ coords: [d.latitude, d.longitude], name: name, style: { r: 6, fill: '#ff5d7a', stroke: '#fff', 'stroke-width': 2 } }],
+                        (zh
+                            ? '📍 当前访客来自 <span class="v-loc">' + place + '</span> <span class="v-ip">' + d.ip + '</span>'
+                            : '📍 Current visitor from <span class="v-loc">' + place + '</span> <span class="v-ip">' + d.ip + '</span>')
+                    );
+                })
+                .catch(fail);
         })();
     </script>
+
+    <!-- ========== Live2D Waifu (pet widget) ========== -->
+    <script src="https://cdn.jsdelivr.net/npm/live2d-widgets@1.0.1/dist/autoload.js"></script>
 
 </body>
 </html>
