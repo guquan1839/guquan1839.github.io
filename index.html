@@ -13,12 +13,12 @@
     <style>
         /* ========== CSS Variables & Theme ========== */
         :root {
-            --bg: #f8fafc;
-            --bg-secondary: #f1f5f9;
+            --bg: #ffffff;
+            --bg-secondary: #f6f6f8;
             --card: #ffffff;
-            --text: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
+            --text: #000000;
+            --text-secondary: #3a3a3a;
+            --text-muted: #7a7a7a;
             --accent: #8b5cf6;
             --accent-light: #f5f3ff;
             --accent-dark: #7c3aed;
@@ -67,46 +67,135 @@
             overflow-x: hidden;
         }
 
-        /* ========== Animated Background ========== */
-        .bg-decoration {
+        /* ========== Animated Particle Background ========== */
+        #particle-canvas {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             z-index: 0;
-            overflow: hidden;
+            pointer-events: none;
+            display: block;
         }
-        .bg-decoration .orb {
+
+        /* ========== Pet Widget (Cat) ========== */
+        .pet {
+            position: fixed;
+            left: 26px;
+            bottom: 18px;
+            width: 124px;
+            height: 136px;
+            z-index: 101;
+            cursor: pointer;
+            user-select: none;
+            transform-origin: 50% 100%;
+            animation: pet-enter 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+        @keyframes pet-enter {
+            from { transform: translateY(50px) scale(0.5); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .pet-cat {
+            width: 100%; height: 100%;
+            overflow: visible;
+            display: block;
+            animation: pet-breathe 3.6s ease-in-out infinite;
+        }
+        @keyframes pet-breathe {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+        .pet-shadow {
             position: absolute;
+            left: 50%; bottom: -4px;
+            transform: translateX(-50%);
+            width: 84px; height: 13px;
+            background: rgba(0,0,0,0.18);
             border-radius: 50%;
-            filter: blur(140px);
-            opacity: 0.06;
-            animation: float 20s ease-in-out infinite;
+            filter: blur(5px);
+            animation: pet-shadow 3.6s ease-in-out infinite;
+            pointer-events: none;
         }
-        .bg-decoration .orb:nth-child(1) {
-            width: 500px; height: 500px;
-            background: #a78bfa;
-            top: -200px; right: -150px;
-            animation-delay: 0s;
+        @keyframes pet-shadow {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.20; }
+            50% { transform: translateX(-50%) scale(0.88); opacity: 0.12; }
         }
-        .bg-decoration .orb:nth-child(2) {
-            width: 400px; height: 400px;
-            background: #c4b5fd;
-            bottom: -150px; left: -100px;
-            animation-delay: -7s;
-            animation-duration: 25s;
+        /* cat parts */
+        .cat-body { fill: #efe6df; stroke: #b9a89c; stroke-width: 3; }
+        .cat-belly { fill: #fbf7f3; }
+        .cat-paw { fill: #e2d5cb; stroke: #b9a89c; stroke-width: 3; }
+        .cat-head { fill: #efe6df; stroke: #b9a89c; stroke-width: 3; }
+        .cat-ear { fill: #efe6df; stroke: #b9a89c; stroke-width: 3; stroke-linejoin: round; }
+        .cat-ear-inner { fill: #f7b9c4; }
+        .cat-tail { fill: #efe6df; stroke: #b9a89c; stroke-width: 3; stroke-linejoin: round; }
+        .pet-cheek { fill: #f7a8bd; opacity: 0.55; }
+        .eye-white { fill: #ffffff; stroke: #2b2b2b; stroke-width: 2.5; }
+        .pupil { fill: #181818; }
+        .pupil-shine { fill: #ffffff; }
+        .muzzle { fill: #fbf7f3; stroke: #c9b6a6; stroke-width: 2; }
+        .nose { fill: #f29dad; stroke: #d97b8f; stroke-width: 1.5; stroke-linejoin: round; }
+        .mouth { fill: none; stroke: #8a6d5b; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+        .whisker { fill: none; stroke: #9a8676; stroke-width: 1.6; stroke-linecap: round; }
+        .eye { transform-box: fill-box; transform-origin: center; }
+        .pet.blink .eye { animation: blink 0.16s ease-in-out; }
+        @keyframes blink {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.08); }
         }
-        .bg-decoration .orb:nth-child(3) {
-            width: 300px; height: 300px;
-            background: #ddd6fe;
-            top: 50%; left: 50%;
-            animation-delay: -14s;
-            animation-duration: 22s;
+        .pet.hop { animation: pet-hop 0.6s ease-out; }
+        @keyframes pet-hop {
+            0% { transform: translateY(0); }
+            40% { transform: translateY(-26px); }
+            100% { transform: translateY(0); }
         }
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(40px, -30px) scale(1.05); }
-            50% { transform: translate(-20px, 20px) scale(0.95); }
-            75% { transform: translate(-30px, -20px) scale(1.02); }
+        /* speech bubble */
+        .pet-speech {
+            position: absolute;
+            left: 50%; top: -10px;
+            transform: translate(-50%, -100%);
+            background: #ffffff;
+            color: #1a1a1a;
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            padding: 5px 12px;
+            font-size: 13px;
+            white-space: nowrap;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.14);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.22s ease, transform 0.22s ease;
+            font-family: "Inter", "Noto Sans SC", sans-serif;
+        }
+        .pet-speech.show {
+            opacity: 1;
+            transform: translate(-50%, -115%);
+        }
+        .pet-speech::after {
+            content: '';
+            position: absolute;
+            left: 50%; bottom: -7px;
+            width: 0; height: 0;
+            transform: translateX(-50%);
+            border: 7px solid transparent;
+            border-top-color: #ffffff;
+            border-bottom: 0;
+        }
+        /* heart effect */
+        .heart-fx {
+            position: absolute;
+            left: 50%; top: 6px;
+            transform: translateX(-50%);
+            font-size: 20px;
+            color: #ff5d7a;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .heart-fx.show {
+            animation: heart-pop 0.9s ease-out forwards;
+        }
+        @keyframes heart-pop {
+            0% { transform: translate(-50%, 0) scale(0.4); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translate(-50%, -64px) scale(1.3); opacity: 0; }
         }
 
         /* ========== Layout ========== */
@@ -125,7 +214,7 @@
             z-index: 100;
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
-            background: rgba(248, 250, 252, 0.75);
+            background: rgba(255, 255, 255, 0.8);
             border-bottom: 1px solid var(--border);
             transition: all var(--transition);
         }
@@ -681,11 +770,58 @@
 </head>
 <body>
 
-    <!-- ========== Animated Background Orbs ========== -->
-    <div class="bg-decoration">
-        <div class="orb"></div>
-        <div class="orb"></div>
-        <div class="orb"></div>
+    <!-- ========== Animated Particle Background ========== -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- ========== Pet Widget (Cat) ========== -->
+    <div class="pet" id="pet" role="button" aria-label="Pet cat" title="摸摸我~">
+        <div class="pet-speech" id="petSpeech">喵～</div>
+        <div class="heart-fx" id="petHeart"></div>
+        <div class="pet-shadow"></div>
+        <svg class="pet-cat" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- tail -->
+            <path class="cat-tail" d="M132 168 C178 158 186 116 166 98 C161 93 154 97 158 104 C172 122 168 150 132 168 Z"/>
+            <!-- body -->
+            <ellipse class="cat-body" cx="100" cy="162" rx="60" ry="52"/>
+            <!-- belly -->
+            <ellipse class="cat-belly" cx="100" cy="174" rx="40" ry="34"/>
+            <!-- paws -->
+            <ellipse class="cat-paw" cx="80" cy="202" rx="17" ry="12"/>
+            <ellipse class="cat-paw" cx="120" cy="202" rx="17" ry="12"/>
+            <!-- head -->
+            <ellipse class="cat-head" cx="100" cy="96" rx="52" ry="47"/>
+            <!-- ears -->
+            <path class="cat-ear" d="M56 70 L46 30 L92 60 Z"/>
+            <path class="cat-ear" d="M144 70 L154 30 L108 60 Z"/>
+            <path class="cat-ear-inner" d="M64 62 L58 42 L84 58 Z"/>
+            <path class="cat-ear-inner" d="M136 62 L142 42 L118 58 Z"/>
+            <!-- cheeks -->
+            <ellipse class="pet-cheek" cx="68" cy="112" rx="10" ry="6"/>
+            <ellipse class="pet-cheek" cx="132" cy="112" rx="10" ry="6"/>
+            <!-- eyes -->
+            <g class="eye" id="eyeL">
+                <ellipse class="eye-white" cx="80" cy="96" rx="12" ry="15"/>
+                <g class="eyeball" id="eyeballL">
+                    <circle class="pupil" cx="80" cy="96" r="7"/>
+                    <circle class="pupil-shine" cx="77" cy="92" r="2.2"/>
+                </g>
+            </g>
+            <g class="eye" id="eyeR">
+                <ellipse class="eye-white" cx="120" cy="96" rx="12" ry="15"/>
+                <g class="eyeball" id="eyeballR">
+                    <circle class="pupil" cx="120" cy="96" r="7"/>
+                    <circle class="pupil-shine" cx="117" cy="92" r="2.2"/>
+                </g>
+            </g>
+            <!-- muzzle -->
+            <ellipse class="muzzle" cx="100" cy="124" rx="24" ry="15"/>
+            <!-- nose -->
+            <path class="nose" d="M94 114 L106 114 L100 120 Z"/>
+            <!-- mouth -->
+            <path class="mouth" d="M100 120 L100 128 M100 128 Q92 134 84 128 M100 128 Q108 134 116 128"/>
+            <!-- whiskers -->
+            <path class="whisker" d="M70 122 L40 118 M70 126 L38 128 M130 122 L160 118 M130 126 L162 128"/>
+        </svg>
     </div>
 
     <!-- ========== Navigation Bar ========== -->
@@ -970,6 +1106,165 @@
                 navbar.style.boxShadow = 'none';
             }
         });
+
+        // ========== Particle Canvas Background ==========
+        (function(){
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let W = 0, H = 0, particles = [];
+            const mouse = { x: -9999, y: -9999 };
+
+            function resize(){
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                W = window.innerWidth; H = window.innerHeight;
+                canvas.width = W * dpr; canvas.height = H * dpr;
+                canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                initParticles();
+            }
+            function initParticles(){
+                const count = Math.max(30, Math.min(110, Math.floor((W * H) / 14000)));
+                particles = [];
+                for (let i = 0; i < count; i++){
+                    particles.push({
+                        x: Math.random() * W,
+                        y: Math.random() * H,
+                        vx: (Math.random() - 0.5) * 0.4,
+                        vy: (Math.random() - 0.5) * 0.4,
+                        r: Math.random() * 1.8 + 1.1
+                    });
+                }
+            }
+            function isDark(){ return document.documentElement.getAttribute('data-theme') === 'dark'; }
+            function draw(){
+                ctx.clearRect(0, 0, W, H);
+                const dark = isDark();
+                const rgb = dark ? '200,205,235' : '110,95,200';
+                for (let i = 0; i < particles.length; i++){
+                    const p = particles[i];
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0 || p.x > W) p.vx *= -1;
+                    if (p.y < 0 || p.y > H) p.vy *= -1;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(' + rgb + ',' + (dark ? 0.55 : 0.45) + ')';
+                    ctx.fill();
+                }
+                const LINK = 130;
+                for (let i = 0; i < particles.length; i++){
+                    for (let j = i + 1; j < particles.length; j++){
+                        const a = particles[i], b = particles[j];
+                        const dx = a.x - b.x, dy = a.y - b.y;
+                        const d2 = dx*dx + dy*dy;
+                        if (d2 < LINK*LINK){
+                            const alpha = (1 - Math.sqrt(d2)/LINK) * (dark ? 0.22 : 0.16);
+                            ctx.beginPath();
+                            ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+                            ctx.strokeStyle = 'rgba(' + rgb + ',' + alpha + ')';
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                const mr = 160;
+                for (let i = 0; i < particles.length; i++){
+                    const p = particles[i];
+                    const dx = p.x - mouse.x, dy = p.y - mouse.y;
+                    const d = Math.sqrt(dx*dx + dy*dy);
+                    if (d < mr){
+                        const alpha = (1 - d/mr) * (dark ? 0.5 : 0.45);
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y);
+                        ctx.strokeStyle = 'rgba(' + rgb + ',' + alpha + ')';
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+                requestAnimationFrame(draw);
+            }
+            window.addEventListener('resize', resize);
+            window.addEventListener('pointermove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+            window.addEventListener('pointerleave', () => { mouse.x = -9999; mouse.y = -9999; });
+            resize();
+            draw();
+        })();
+
+        // ========== Tail Sway (SVG, robust across browsers) ==========
+        (function(){
+            const tail = document.querySelector('.cat-tail');
+            if (!tail) return;
+            let t = 0;
+            (function loop(){
+                t += 0.02;
+                const angle = Math.sin(t) * 11.5 + 1.5;
+                tail.setAttribute('transform', 'rotate(' + angle.toFixed(2) + ' 150 168)');
+                requestAnimationFrame(loop);
+            })();
+        })();
+
+        // ========== Pet Widget Interaction ==========
+        (function(){
+            const pet = document.getElementById('pet');
+            const eyeballL = document.getElementById('eyeballL');
+            const eyeballR = document.getElementById('eyeballR');
+            const petSpeech = document.getElementById('petSpeech');
+            const petHeart = document.getElementById('petHeart');
+            if (!pet) return;
+
+            const eyes = [
+                { el: eyeballL, cx: 80, cy: 96 },
+                { el: eyeballR, cx: 120, cy: 96 }
+            ];
+            function movePupils(mx, my){
+                const rect = pet.getBoundingClientRect();
+                if (rect.width === 0) return;
+                eyes.forEach(e => {
+                    if (!e.el) return;
+                    const ox = rect.left + (e.cx / 200) * rect.width;
+                    const oy = rect.top + (e.cy / 220) * rect.height;
+                    const dx = mx - ox, dy = my - oy;
+                    const len = Math.hypot(dx, dy);
+                    const max = 4.5;
+                    let sx = 0, sy = 0;
+                    if (len > 0){
+                        sx = (dx / len) * max;
+                        sy = (dy / len) * Math.min(max, 3.2);
+                    }
+                    e.el.setAttribute('transform', 'translate(' + sx.toFixed(2) + ',' + sy.toFixed(2) + ')');
+                });
+            }
+            window.addEventListener('pointermove', e => movePupils(e.clientX, e.clientY));
+
+            function blink(){
+                pet.classList.add('blink');
+                setTimeout(() => pet.classList.remove('blink'), 170);
+            }
+            setInterval(() => { if (Math.random() < 0.75) blink(); }, 3600);
+
+            let speechTimer = null;
+            function showSpeech(text, ms){
+                petSpeech.textContent = text;
+                petSpeech.classList.add('show');
+                clearTimeout(speechTimer);
+                speechTimer = setTimeout(() => petSpeech.classList.remove('show'), ms || 2200);
+            }
+            const idlePhrases = ['喵～','喵呜~','求撸！','咕咕?','点我有惊喜','(=^･ω･^=)','别盯着我看啦','今天也很可爱','摸摸我吧','Meow~'];
+            setInterval(() => { if (Math.random() < 0.5) showSpeech(idlePhrases[Math.floor(Math.random()*idlePhrases.length)]); }, 11000);
+
+            function showHeart(){
+                petHeart.textContent = '❤';
+                petHeart.classList.remove('show');
+                void petHeart.offsetWidth;
+                petHeart.classList.add('show');
+            }
+            pet.addEventListener('click', () => {
+                pet.classList.remove('hop');
+                void pet.offsetWidth;
+                pet.classList.add('hop');
+                showHeart();
+                showSpeech(['喵！','喵喵~','呼噜呼噜~','再摸摸~','喵呜!'][Math.floor(Math.random()*5)], 1700);
+            });
+        })();
     </script>
 
 </body>
