@@ -705,6 +705,8 @@
     </style>
     <!-- jsVectorMap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.7.0/dist/jsvectormap.min.css">
+    <!-- Live2D Waifu CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/live2d-widgets@1.0.1/dist/waifu.css">
 </head>
 <body>
 
@@ -1270,8 +1272,45 @@
         })();
     </script>
 
-    <!-- ========== Live2D Waifu (pet widget) ========== -->
-    <script src="https://cdn.jsdelivr.net/npm/live2d-widgets@1.0.1/dist/autoload.js"></script>
+    <!-- ========== Live2D Waifu (pet widget) — models from zenghongtu/live2d-model-assets ========== -->
+    <script type="module">
+        // waifu-tips.js is an ES module that also registers window.initWidget when loaded.
+        // Static `import` ensures the module (and its window side-effect) runs before we call initWidget.
+        import 'https://cdn.jsdelivr.net/npm/live2d-widgets@1.0.1/dist/waifu-tips.js';
+
+        const LIB = 'https://cdn.jsdelivr.net/npm/live2d-widgets@1.0.1/dist/';
+        const MODEL_BASE = 'https://cdn.jsdelivr.net/gh/zenghongtu/live2d-model-assets@master/assets/';
+
+        // Curated characters from zenghongtu/live2d-model-assets (all Cubism 2 format, verified reachable on jsDelivr).
+        const MODELS = [
+            { name: 'Nepgear',       paths: [MODEL_BASE + 'HyperdimensionNeptunia/nepgear/nepgear.model.json'] },
+            { name: 'Neptune',       paths: [MODEL_BASE + 'HyperdimensionNeptunia/nepnep/nepnep.model.json'] },
+            { name: 'Neptune (cls)', paths: [MODEL_BASE + 'HyperdimensionNeptunia/neptune_classic/model.json'] },
+            { name: 'Blanc',         paths: [MODEL_BASE + 'HyperdimensionNeptunia/blanc_normal/model.json'] },
+            { name: 'HK416',         paths: [MODEL_BASE + "Girls%27%20Frontline/hk416_3401/hk416_3401.model.json"] },
+            { name: 'WA2000',        paths: [MODEL_BASE + "Girls%27%20Frontline/wa2000_6/wa2000_6.model.json"] },
+            { name: 'UMP45',         paths: [MODEL_BASE + "Girls%27%20Frontline/ump45_3403/ump45_3403.model.json"] },
+            { name: 'G41',           paths: [MODEL_BASE + "Girls%27%20Frontline/g41_2401/g41_2401.model.json"] }
+        ];
+
+        // Only init when container exists (autoload normally injects it; we provide it ourselves).
+        function boot() {
+            if (typeof window.initWidget !== 'function') {
+                return setTimeout(boot, 50);
+            }
+            window.initWidget({
+                waifuPath: LIB + 'waifu-tips.json',
+                cubism2Path: LIB + 'live2d.min.js',
+                // No cdnPath / apiPath -> use the local `models` list directly, no backend API needed.
+                models: MODELS,
+                modelId: Math.floor(Math.random() * MODELS.length),
+                modelTexturesId: 0,
+                tools: ['hitokoto', 'switch-model', 'switch-texture', 'photo', 'info', 'quit'],
+                logLevel: 'warn'
+            });
+        }
+        boot();
+    </script>
 
 </body>
 </html>
