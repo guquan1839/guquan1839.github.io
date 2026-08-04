@@ -657,19 +657,16 @@
             50% { transform: scale(1); }
         }
 
-        /* ========== Pixel Pet (Cat) ========== */
+        /* ========== Dimo Pet ========== */
         #pixel-pet {
             position: fixed;
             left: 14px;
             bottom: 14px;
-            width: 64px;
-            height: 64px;
+            width: 104px;
+            height: 82px;
             z-index: 102;
             pointer-events: auto;
             cursor: pointer;
-            image-rendering: pixelated;
-            image-rendering: -moz-crisp-edges;
-            image-rendering: crisp-edges;
             animation: pp-in 0.8s ease-out both;
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25));
         }
@@ -680,8 +677,8 @@
         #pixel-pet canvas { width: 100%; height: 100%; display: block; }
         #pixel-pet .pp-tip {
             position: absolute;
-            left: 70px;
-            top: 14px;
+            left: 110px;
+            top: 22px;
             background: #fff;
             color: #1a1a1a;
             border: 1px solid var(--border);
@@ -999,9 +996,9 @@
         </svg>
     </button>
 
-    <!-- ========== Pixel Pet (Dimo / 迪莫 from 洛克王国) ========== -->
+    <!-- ========== Dimo Pet / 迪莫 ========== -->
     <div id="pixel-pet" role="button" aria-label="Dimo pet" title="摸摸迪莫~">
-        <canvas id="pet-canvas" width="32" height="32"></canvas>
+        <canvas id="pet-canvas" width="232" height="180"></canvas>
         <div class="pp-tip" id="pp-tip">我是迪莫~</div>
     </div>
 
@@ -1317,158 +1314,69 @@
         })();
     </script>
 
-    <!-- ========== Pixel Pet: 迪莫 (Dimo, 光系幼兽·洛克王国) — zero external dep ========== -->
+    <!-- ========== Dimo pet: reference artwork + original movement logic ========== -->
     <script>
         (function () {
             const canvas = document.getElementById('pet-canvas');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
-            ctx.imageSmoothingEnabled = false;
-            const W = 32, H = 32;
-            // Dimo (Dream) — 光系幼兽, 洛克王国. Colors per Baidu Baike:
-            //   body blue (#5BA7E0) + dark outline (#3E82BD),
-            //   face/belly white (#FFFFFF / highlight #EAF6FF),
-            //   ear tips & 5-star tail tip yellow (#FFD23F / shade #E8B400),
-            //   eyes dark navy (#20304A) w/ white shine, pink cheek (#FF9DB5), grey-blue nose (#4A6B8A).
+            ctx.imageSmoothingEnabled = true;
+            const W = canvas.width, H = canvas.height;
+            const dimoImage = new Image();
+            let dimoReady = false;
+            dimoImage.onload = () => { dimoReady = true; };
+            dimoImage.src = 'assets/dimo-pet.png';
 
-            // Pixel helpers
-            function rect(x, y, w, h, c) { ctx.fillStyle = c; ctx.fillRect(x, y, w, h); }
-
-            // ====== GBA/红宝石-style Dimo sprite, 32×32, clear silhouette ======
-            // body blue, face/belly white, ear tips + 5-star tail tip yellow (per Baidu Baike).
-            function drawDimo(facing, frame, tailSway, closedEyes) {
+            function renderDimo(facing, bob, rotation, scale, sleeping) {
                 ctx.clearRect(0, 0, W, H);
-                const bob = frame === 1 ? -1 : 0; // tiny hop walking step
-                const y0 = 4 + bob;
+                if (!dimoReady) return;
 
-                // --- Star tail (behind body) ---
-                const ty = y0 + 14 + Math.round(Math.sin(tailSway) * 1);
-                rect(27, ty, 3, 3, '#5BA7E0');
-                rect(27, ty + 2, 3, 1, '#3E82BD');
-                // 5-point star tip (readable as a star)
-                rect(30, ty - 1, 1, 6, '#FFD23F');
-                rect(29, ty,     3, 1, '#FFD23F');
-                rect(29, ty + 4, 3, 1, '#FFD23F');
-                rect(29, ty + 5, 3, 1, '#E8B400');
-                rect(31, ty + 1, 1, 3, '#E8B400');
+                ctx.save();
+                ctx.globalAlpha = sleeping ? 0.72 : 0.22;
+                ctx.fillStyle = '#4b5563';
+                ctx.beginPath();
+                ctx.ellipse(W * 0.5, H * 0.90, 38 * scale, 9 * scale, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
 
-                // --- Head (front-facing, centered) ---
-                rect(10, y0, 12, 11, '#5BA7E0');
-                rect(10, y0 + 1, 1, 10, '#3E82BD');          // left outline
-                // white face mask
-                rect(12, y0 + 3, 8, 7, '#FFFFFF');
-                rect(13, y0 + 3, 6, 1, '#EAF6FF');
+                ctx.save();
+                ctx.translate(W / 2, H / 2 - 5 + bob);
+                if (facing === 'left') ctx.scale(-1, 1);
+                ctx.rotate(rotation);
+                ctx.scale(scale, scale);
+                ctx.drawImage(dimoImage, -W / 2, -H / 2, W, H);
+                ctx.restore();
 
-                // --- Ears with yellow tips ---
-                rect(10, y0 - 3, 3, 3, '#5BA7E0'); rect(10, y0 - 4, 2, 1, '#3E82BD');
-                rect(10, y0 - 4, 3, 2, '#FFD23F'); rect(11, y0 - 5, 2, 1, '#FFE882');
-                rect(19, y0 - 3, 3, 3, '#5BA7E0'); rect(21, y0 - 4, 2, 1, '#3E82BD');
-                rect(19, y0 - 4, 3, 2, '#FFD23F'); rect(19, y0 - 5, 2, 1, '#FFD23F');
-
-                // --- Eyes (ruby-style black with white shine) ---
-                if (closedEyes) {
-                    rect(13, y0 + 6, 2, 1, '#20304A');
-                    rect(17, y0 + 6, 2, 1, '#20304A');
-                } else {
-                    rect(13, y0 + 5, 2, 3, '#20304A');
-                    rect(17, y0 + 5, 2, 3, '#20304A');
-                    rect(14, y0 + 5, 1, 1, '#FFFFFF');
-                    rect(18, y0 + 5, 1, 1, '#FFFFFF');
+                if (sleeping) {
+                    ctx.save();
+                    ctx.fillStyle = '#8094b3';
+                    ctx.font = 'bold 20px sans-serif';
+                    ctx.fillText('z', W - 44, 32);
+                    ctx.font = 'bold 28px sans-serif';
+                    ctx.fillText('Z', W - 26, 20);
+                    ctx.restore();
                 }
-                // cheeks + nose + mouth
-                rect(12, y0 + 8, 1, 1, '#FF9DB5'); rect(19, y0 + 8, 1, 1, '#FF9DB5');
-                rect(15, y0 + 8, 2, 1, '#4A6B8A');
-                rect(15, y0 + 9, 1, 1, '#4A6B8A'); rect(16, y0 + 9, 1, 1, '#4A6B8A');
+            }
 
-                // --- Body (centered below head) ---
-                rect(8, y0 + 11, 16, 9, '#5BA7E0');
-                rect(8, y0 + 11, 1, 9, '#3E82BD');
-                rect(23, y0 + 11, 1, 9, '#3E82BD');
-                rect(11, y0 + 14, 10, 6, '#FFFFFF');          // belly
-                rect(12, y0 + 19, 8, 1, '#EAF6FF');
-
-                // --- Legs (2-frame walk) ---
-                if (frame === 0) {
-                    rect(9,  y0 + 20, 3, 3, '#5BA7E0'); rect(9,  y0 + 22, 3, 1, '#3E82BD');
-                    rect(14, y0 + 20, 3, 3, '#5BA7E0'); rect(14, y0 + 22, 3, 1, '#3E82BD');
-                    rect(19, y0 + 20, 3, 3, '#5BA7E0'); rect(19, y0 + 22, 3, 1, '#3E82BD');
-                    rect(21, y0 + 20, 3, 3, '#5BA7E0'); rect(21, y0 + 22, 3, 1, '#3E82BD');
-                } else {
-                    rect(8,  y0 + 20, 3, 3, '#5BA7E0'); rect(8,  y0 + 22, 3, 1, '#3E82BD');
-                    rect(13, y0 + 20, 3, 3, '#5BA7E0'); rect(13, y0 + 22, 3, 1, '#3E82BD');
-                    rect(18, y0 + 20, 3, 3, '#5BA7E0'); rect(18, y0 + 22, 3, 1, '#3E82BD');
-                    rect(22, y0 + 21, 3, 2, '#5BA7E0'); rect(22, y0 + 22, 3, 1, '#3E82BD');
-                }
+            function drawDimo(facing, frame, tailSway, closedEyes) {
+                const bob = (frame ? -4 : 0) + Math.sin(tailSway) * 1.5;
+                const lean = facing === 'left' ? -0.025 : 0.025;
+                renderDimo(facing, bob, lean, closedEyes ? 0.97 : 1, false);
             }
 
             function drawSit(t) {
-                ctx.clearRect(0, 0, W, H);
-                const y0 = 2;
-                // Star tail behind (sways)
-                const tdy = Math.round(Math.sin(t / 6) * 1.5);
-                rect(25, y0 + 12 + tdy, 3, 3, '#5BA7E0');
-                rect(28, y0 + 11 + tdy, 3, 4, '#FFD23F');
-                rect(29, y0 + 10 + tdy, 1, 6, '#FFD23F');
-                rect(28, y0 + 12 + tdy, 3, 1, '#E8B400');
-                // Body (sitting upright)
-                rect(8, y0 + 13, 16, 11, '#5BA7E0');
-                rect(8, y0 + 13, 1, 11, '#3E82BD'); rect(23, y0 + 13, 1, 11, '#3E82BD');
-                rect(11, y0 + 15, 10, 8, '#FFFFFF');          // belly
-                rect(12, y0 + 22, 8, 1, '#EAF6FF');
-                rect(10, y0 + 24, 3, 2, '#5BA7E0'); rect(19, y0 + 24, 3, 2, '#5BA7E0'); // paws
-                // Head (front-facing)
-                rect(9, y0 + 1, 14, 11, '#5BA7E0');
-                rect(9, y0 + 2, 1, 10, '#3E82BD'); rect(22, y0 + 2, 1, 10, '#3E82BD');
-                rect(11, y0 + 4, 10, 7, '#FFFFFF');
-                rect(12, y0 + 4, 8, 1, '#EAF6FF');
-                // ears + tips
-                rect(9,  y0 - 2, 3, 3, '#5BA7E0'); rect(9, y0 - 3, 3, 2, '#FFD23F');
-                rect(20, y0 - 2, 3, 3, '#5BA7E0'); rect(20, y0 - 3, 3, 2, '#FFD23F');
-                // eyes
-                rect(12, y0 + 6, 2, 3, '#20304A'); rect(18, y0 + 6, 2, 3, '#20304A');
-                rect(13, y0 + 6, 1, 1, '#FFFFFF'); rect(19, y0 + 6, 1, 1, '#FFFFFF');
-                // cheeks + nose + mouth
-                rect(11, y0 + 9, 1, 1, '#FF9DB5'); rect(20, y0 + 9, 1, 1, '#FF9DB5');
-                rect(15, y0 + 9, 2, 1, '#4A6B8A');
-                rect(15, y0 + 10, 1, 1, '#4A6B8A'); rect(16, y0 + 10, 1, 1, '#4A6B8A');
+                renderDimo(facing, Math.sin(t / 4) * 2, 0, 0.94, false);
             }
 
-function drawSleep(closed) {
-                ctx.clearRect(0, 0, W, H);
-                const y0 = 12;
-                // Curled body (rounded blob, ruby-style)
-                rect(5, y0, 22, 9, '#5BA7E0');
-                rect(5, y0 + 1, 1, 8, '#3E82BD'); rect(26, y0 + 1, 1, 8, '#3E82BD');
-                rect(8, y0 + 2, 16, 4, '#FFFFFF');          // belly
-                // Head resting (front)
-                rect(6, y0 - 5, 11, 8, '#5BA7E0');
-                rect(6, y0 - 4, 1, 7, '#3E82BD');
-                rect(8, y0 - 3, 8, 5, '#FFFFFF');            // face
-                // ears + tips
-                rect(7, y0 - 7, 3, 2, '#5BA7E0'); rect(7, y0 - 8, 3, 1, '#FFD23F');
-                rect(13, y0 - 7, 3, 2, '#5BA7E0'); rect(13, y0 - 8, 3, 1, '#FFD23F');
-                // closed eyes (^_^)
-                rect(9, y0 - 1, 2, 1, '#20304A');
-                rect(13, y0 - 1, 2, 1, '#20304A');
-                // nose
-                rect(11, y0, 2, 1, '#4A6B8A');
-                // curled star tail (closes the circle)
-                rect(24, y0 + 2, 3, 3, '#5BA7E0');
-                rect(27, y0 + 1, 3, 4, '#FFD23F');
-                rect(28, y0,     1, 6, '#FFD23F');
-                rect(27, y0 + 4, 3, 1, '#E8B400');
-                // Z's
-                if (closed) {
-                    ctx.fillStyle = '#8FA9C8';
-                    ctx.font = '8px sans-serif';
-ctx.fillText('z', 22, 5 - Math.round(Math.sin(performance.now() / 300)));
-                    ctx.fillText('Z', 26, 2);
-                }
+            function drawSleep(closed) {
+                const breathe = 0.88 + Math.sin(performance.now() / 420) * 0.012;
+                renderDimo(facing, 7, facing === 'left' ? 0.08 : -0.08, breathe, closed);
             }
 
             const pet = document.getElementById('pixel-pet');
             const tip = document.getElementById('pp-tip');
             let mouseX = window.innerWidth / 2, mouseY = window.innerHeight - 100;
+            const PET_W = 104, PET_H = 82;
             let petX = 14, petY = 14; // container pos in px
             let vx = 0, vy = 0;
             let facing = 'right';
@@ -1515,16 +1423,16 @@ ctx.fillText('z', 22, 5 - Math.round(Math.sin(performance.now() / 300)));
 
             window.addEventListener('pointermove', e => { mouseX = e.clientX; mouseY = e.clientY; });
             window.addEventListener('resize', () => {
-                petX = Math.min(petX, window.innerWidth - 80);
-                petY = Math.min(petY, window.innerHeight - 80);
-                pet.style.left = petX + 'px'; pet.style.bottom = ''; pet.style.top = (window.innerHeight - 64 - petY) + 'px';
+                petX = Math.min(petX, window.innerWidth - PET_W - 8);
+                petY = Math.min(petY, window.innerHeight - PET_H - 8);
+                pet.style.left = petX + 'px'; pet.style.bottom = ''; pet.style.top = (window.innerHeight - PET_H - petY) + 'px';
             });
 
             // manage container position: we use left+top coords for free walking
             pet.style.left = petX + 'px';
             pet.style.bottom = '';
-            pet.style.top = (window.innerHeight - 78 + petY * 0) + 'px'; // start near bottom
-            let topPos = window.innerHeight - 78;
+            pet.style.top = (window.innerHeight - PET_H - 14) + 'px'; // start near bottom
+            let topPos = window.innerHeight - PET_H - 14;
 
             function loop(t) {
                 frameAcc += 16;
@@ -1535,9 +1443,9 @@ ctx.fillText('z', 22, 5 - Math.round(Math.sin(performance.now() / 300)));
 
                 // chase: walk toward mouse gently
                 if (mode === 'chase') {
-                    const cx = petX + 32, cy = topPos + 32;
+                    const cx = petX + PET_W / 2, cy = topPos + PET_H / 2;
                     const dx = mouseX - cx, dy = mouseY - cy;
-                    const d = Math.hypot(dx, dy);
+                const d = Math.hypot(dx, dy);
                     if (d > 8) {
                         const sp = 0.9;
                         vx = (dx / d) * sp; vy = (dy / d) * sp;
@@ -1551,10 +1459,10 @@ ctx.fillText('z', 22, 5 - Math.round(Math.sin(performance.now() / 300)));
                 // move
                 petX += vx; topPos += vy;
                 // bounds
-                const maxX = window.innerWidth - 70;
+                const maxX = window.innerWidth - PET_W - 4;
                 if (petX < 2) { petX = 2; vx = Math.abs(vx); facing = 'right'; }
                 if (petX > maxX) { petX = maxX; vx = -Math.abs(vx); facing = 'left'; }
-                const minY = 60, maxY = window.innerHeight - 70;
+                const minY = 60, maxY = window.innerHeight - PET_H - 4;
                 if (topPos < minY) { topPos = minY; vy = Math.abs(vy); }
                 if (topPos > maxY) { topPos = maxY; vy = -Math.abs(vy); }
 
