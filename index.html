@@ -406,37 +406,39 @@
         .section-header {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 0;
             margin: 0 18px -8px;
             position: relative;
             z-index: 2;
             min-height: 78px;
         }
         .section-header .icon {
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #fff879, #91df32);
+            width: 86px; height: 74px;
+            border-radius: 0;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #147faa;
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 2px #56b9dc, 0 3px 0 #348ead;
+            color: transparent;
+            border: 0;
+            box-shadow: none;
             flex-shrink: 0;
         }
-        .section-header .icon svg { width: 18px; height: 18px; }
+        .section-header .icon svg { display: none; }
         .section-header h2 {
             font-size: 1.25rem;
             font-weight: 700;
             letter-spacing: -0.3px;
             color: #fff;
-            background: linear-gradient(#40cef5, #168fc8);
-            border: 3px solid #fff;
-            border-radius: 20px 20px 20px 7px;
-            padding: 4px 20px;
-            text-shadow: 0 2px 0 rgba(0,89,133,.35);
-            box-shadow: 0 0 0 2px #4cbbe1, 0 4px 0 #227fa5;
-            text-shadow: 0 2px 0 rgba(0,89,133,.35), 2px 0 0 #ffd92f, -2px 0 0 #ffd92f, 0 2px 0 #ffd92f, 0 -2px 0 #ffd92f;
+            background: linear-gradient(#5ed1e8, #35b9d8);
+            border: 3px solid #159ac0;
+            border-radius: 8px;
+            padding: 8px 24px;
+            color: #ffe62f;
+            text-shadow: 2px 2px 0 #7a7400, 0 1px 0 #fff7a2;
+            box-shadow: inset 0 0 0 2px rgba(255,255,255,.72), 0 4px 0 #167fa1, 0 0 0 3px #ffe64d;
+            min-width: 190px;
+            text-align: center;
         }
 
         .section-header .icon {
@@ -445,10 +447,10 @@
         .section-header .icon::after {
             content: '';
             position: absolute;
-            width: 46px;
-            height: 46px;
-            left: -18px;
-            bottom: -15px;
+            width: 80px;
+            height: 72px;
+            left: 0;
+            bottom: -3px;
             background: center / contain no-repeat;
             filter: drop-shadow(0 2px 0 rgba(0,92,130,.28));
             pointer-events: none;
