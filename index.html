@@ -1461,10 +1461,9 @@ function drawSleep(closed) {
                 if (closed) {
                     ctx.fillStyle = '#8FA9C8';
                     ctx.font = '8px sans-serif';
-                    ctx.fillText('z', 22, 5 - Math.round(Math.sin(performance.now() / 300)));
+ctx.fillText('z', 22, 5 - Math.round(Math.sin(performance.now() / 300)));
                     ctx.fillText('Z', 26, 2);
                 }
-            }
             }
 
             const pet = document.getElementById('pixel-pet');
