@@ -13,40 +13,40 @@
     <style>
         /* ========== CSS Variables & Theme ========== */
         :root {
-            --bg: #ffffff;
-            --bg-secondary: #f6f6f8;
-            --card: #ffffff;
-            --text: #000000;
-            --text-secondary: #3a3a3a;
-            --text-muted: #7a7a7a;
-            --accent: #8b5cf6;
-            --accent-light: #f5f3ff;
-            --accent-dark: #7c3aed;
-            --accent-gradient: linear-gradient(135deg, #a78bfa, #8b5cf6, #c4b5fd);
-            --border: #e2e8f0;
-            --border-light: #f1f5f9;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
-            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.05);
-            --radius: 16px;
-            --radius-sm: 10px;
-            --radius-xs: 8px;
-            --max-width: 800px;
+            --bg: #ddff8d;
+            --bg-secondary: #eefbd2;
+            --card: rgba(255, 255, 255, 0.94);
+            --text: #23445c;
+            --text-secondary: #3d6175;
+            --text-muted: #668397;
+            --accent: #18aee4;
+            --accent-light: #dff7ff;
+            --accent-dark: #087fb9;
+            --accent-gradient: linear-gradient(135deg, #38d7ff, #1bafe5 48%, #7fcf35);
+            --border: #76d4f2;
+            --border-light: #c8eef9;
+            --shadow-sm: 0 2px 0 rgba(22, 139, 190, 0.14);
+            --shadow: 0 6px 0 rgba(28, 151, 197, 0.16), 0 12px 24px rgba(53, 132, 116, 0.12);
+            --shadow-md: 0 8px 0 rgba(28, 151, 197, 0.2), 0 16px 30px rgba(53, 132, 116, 0.16);
+            --shadow-lg: 0 10px 0 rgba(28, 151, 197, 0.22), 0 20px 36px rgba(53, 132, 116, 0.18);
+            --radius: 22px;
+            --radius-sm: 17px;
+            --radius-xs: 13px;
+            --max-width: 920px;
             --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
         }
 
         /* Dark theme */
         [data-theme="dark"] {
-            --bg: #0f172a;
-            --bg-secondary: #1e293b;
-            --card: #1e293b;
-            --text: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --accent-light: #2e1065;
-            --border: #334155;
-            --border-light: #1e293b;
+            --bg: #173f5e;
+            --bg-secondary: #214f70;
+            --card: rgba(29, 68, 93, .94);
+            --text: #f3fbff;
+            --text-secondary: #c7e7f4;
+            --text-muted: #92bfd0;
+            --accent-light: #235d72;
+            --border: #55b9d3;
+            --border-light: #315e76;
             --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
             --shadow: 0 1px 3px rgba(0,0,0,0.4);
             --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
@@ -58,13 +58,44 @@
         html { scroll-behavior: smooth; }
         body {
             font-family: "Inter", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg);
+            background:
+                radial-gradient(circle at 15% 12%, rgba(255,255,255,.9) 0 4%, transparent 15%),
+                radial-gradient(circle at 86% 18%, rgba(255,255,255,.72) 0 5%, transparent 16%),
+                linear-gradient(180deg, #82e5fb 0, #c9f8f4 28%, #e8ffb1 64%, #c4f06b 100%);
+            background-attachment: fixed;
             color: var(--text);
             line-height: 1.75;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             transition: background var(--transition), color var(--transition);
             overflow-x: hidden;
+        }
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            z-index: 0;
+            pointer-events: none;
+            bottom: -18px;
+            width: 34vw;
+            max-width: 520px;
+            height: 42vh;
+            opacity: .78;
+            filter: drop-shadow(0 -5px 12px rgba(50,145,100,.14));
+        }
+        body::before {
+            left: -8vw;
+            background:
+                radial-gradient(ellipse at 25% 100%, #65be35 0 17%, transparent 18%),
+                radial-gradient(ellipse at 55% 100%, #82d844 0 23%, transparent 24%),
+                radial-gradient(ellipse at 85% 100%, #a7e85d 0 18%, transparent 19%);
+        }
+        body::after {
+            right: -7vw;
+            background:
+                radial-gradient(ellipse at 20% 100%, #a7e85d 0 18%, transparent 19%),
+                radial-gradient(ellipse at 52% 100%, #82d844 0 24%, transparent 25%),
+                radial-gradient(ellipse at 82% 100%, #65be35 0 17%, transparent 18%);
         }
 
         /* ========== Animated Particle Background ========== */
@@ -75,6 +106,7 @@
             z-index: 0;
             pointer-events: none;
             display: block;
+            opacity: .42;
         }
 
         /* ========== Visitor World Map ========== */
@@ -87,7 +119,7 @@
         #visitor-map svg { display: block; width: 100% !important; height: 100% !important; }
         /* region styling */
         #visitor-map .jvm-region,
-        #visitor-map path.jvm-region { fill: #eef0f4; stroke: #dfe3ea; stroke-width: 0.5; }
+        #visitor-map path.jvm-region { fill: #bcebb7; stroke: #64c6d9; stroke-width: 0.5; }
         [data-theme="dark"] #visitor-map .jvm-region,
         [data-theme="dark"] #visitor-map path.jvm-region { fill: #1f2937; stroke: #374151; }
         /* glowing pulsing marker (visitor dot) */
@@ -138,7 +170,7 @@
         .container {
             max-width: var(--max-width);
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 0 28px 28px;
             position: relative;
             z-index: 1;
         }
@@ -148,14 +180,15 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            background: rgba(255, 255, 255, 0.8);
-            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px) saturate(160%);
+            -webkit-backdrop-filter: blur(12px) saturate(160%);
+            background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(214,248,255,.92));
+            border-bottom: 4px solid #46c7ee;
+            box-shadow: 0 4px 0 rgba(10,145,193,.16), 0 9px 22px rgba(33,125,143,.16);
             transition: all var(--transition);
         }
         [data-theme="dark"] .navbar {
-            background: rgba(15, 23, 42, 0.75);
+            background: linear-gradient(180deg, rgba(36,70,102,.96), rgba(25,79,111,.94));
         }
         .navbar .nav-inner {
             max-width: var(--max-width);
@@ -172,6 +205,12 @@
             color: var(--text);
             text-decoration: none;
             letter-spacing: -0.3px;
+            color: #fff;
+            background: linear-gradient(#40caf2, #149ed7);
+            border: 2px solid #fff;
+            border-radius: 17px;
+            padding: 2px 13px;
+            box-shadow: 0 0 0 2px #49c9ef, 0 3px 0 #0b83b7;
         }
         .nav-links {
             display: flex;
@@ -183,13 +222,14 @@
             color: var(--text-secondary);
             text-decoration: none;
             padding: 6px 14px;
-            border-radius: 20px;
+            border-radius: 16px;
             transition: all var(--transition);
             font-weight: 500;
         }
         .nav-links a:hover {
-            color: var(--accent);
-            background: var(--accent-light);
+            color: #3e7400;
+            background: linear-gradient(#f5ff83, #b9ec39);
+            box-shadow: inset 0 0 0 2px #fff, 0 0 0 2px #83bf20, 0 3px 0 #6b9e17;
         }
         .theme-toggle {
             width: 38px; height: 38px;
@@ -241,9 +281,25 @@
         /* ========== Hero Section ========== */
         .hero {
             text-align: center;
-            padding: 72px 0 48px;
+            padding: 74px 28px 42px;
             position: relative;
+            margin-top: 34px;
+            background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(235,253,255,.86));
+            border: 4px solid #58c9ec;
+            border-radius: 34px;
+            box-shadow: inset 0 0 0 4px rgba(255,255,255,.88), 0 8px 0 rgba(32,151,195,.2), 0 18px 38px rgba(46,139,129,.16);
         }
+        .hero::before, .hero::after {
+            content: '✦';
+            position: absolute;
+            color: #ffd83d;
+            font-size: 36px;
+            text-shadow: 0 2px 0 #f29a22, 0 0 12px rgba(255,226,57,.7);
+            animation: twinkle 1.8s ease-in-out infinite;
+        }
+        .hero::before { left: 42px; top: 34px; }
+        .hero::after { right: 44px; top: 66px; animation-delay: .7s; }
+        @keyframes twinkle { 50% { transform: scale(.65) rotate(18deg); opacity: .55; } }
         .avatar-wrapper {
             position: relative;
             display: inline-block;
@@ -260,7 +316,8 @@
             font-size: 3rem;
             font-weight: 700;
             color: #fff;
-            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+            border: 5px solid #fff;
+            box-shadow: 0 0 0 4px #42c8ee, 0 8px 0 #168ebc, 0 13px 28px rgba(24,127,161,.24);
             position: relative;
             z-index: 1;
             user-select: none;
@@ -319,20 +376,20 @@
             gap: 7px;
             padding: 9px 20px;
             background: var(--card);
-            border: 1px solid var(--border);
+            border: 3px solid #67ccea;
             border-radius: 25px;
             font-size: 0.88rem;
             font-weight: 500;
             color: var(--text);
             text-decoration: none;
             transition: all var(--transition);
-            box-shadow: var(--shadow-sm);
+            box-shadow: inset 0 0 0 2px #fff, 0 4px 0 #2d9fc9;
         }
         .social-links a:hover {
             border-color: var(--accent);
             background: var(--accent-light);
             color: var(--accent);
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.03);
             box-shadow: var(--shadow-md);
         }
         .social-links svg { width: 17px; height: 17px; flex-shrink: 0; }
@@ -358,16 +415,20 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 20px;
+            margin: 0 18px -8px;
+            position: relative;
+            z-index: 2;
         }
         .section-header .icon {
             width: 36px; height: 36px;
-            border-radius: 10px;
-            background: var(--accent-light);
+            border-radius: 50%;
+            background: linear-gradient(145deg, #fff879, #91df32);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--accent);
+            color: #147faa;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px #56b9dc, 0 3px 0 #348ead;
             flex-shrink: 0;
         }
         .section-header .icon svg { width: 18px; height: 18px; }
@@ -375,15 +436,26 @@
             font-size: 1.25rem;
             font-weight: 700;
             letter-spacing: -0.3px;
+            color: #fff;
+            background: linear-gradient(#40cef5, #168fc8);
+            border: 3px solid #fff;
+            border-radius: 20px 20px 20px 7px;
+            padding: 4px 20px;
+            text-shadow: 0 2px 0 rgba(0,89,133,.35);
+            box-shadow: 0 0 0 2px #4cbbe1, 0 4px 0 #227fa5;
         }
 
         .card {
             background: var(--card);
-            border: 1px solid var(--border);
+            border: 4px solid var(--border);
             border-radius: var(--radius);
-            padding: 28px;
+            padding: 38px 28px 28px;
             box-shadow: var(--shadow);
             transition: all var(--transition);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            outline: 3px solid rgba(255,255,255,.9);
+            outline-offset: -8px;
         }
         .card:hover {
             box-shadow: var(--shadow-md);
@@ -404,7 +476,9 @@
             padding: 14px 18px;
             background: var(--accent-light);
             border-radius: var(--radius-xs);
-            border-left: 3px solid var(--accent);
+            border: 2px solid #89d8ee;
+            border-left: 8px solid #7fd437;
+            box-shadow: inset 0 0 0 2px #fff;
             font-size: 0.9rem;
             color: var(--text-secondary);
         }
@@ -419,7 +493,7 @@
             top: 4px;
             bottom: 4px;
             width: 2px;
-            background: var(--border);
+            background: repeating-linear-gradient(to bottom, #62c9e9 0 7px, #b8ea55 7px 14px);
             border-radius: 1px;
         }
         .timeline-item {
@@ -435,9 +509,9 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: var(--accent);
+            background: #ffe95a;
             border: 3px solid var(--card);
-            box-shadow: 0 0 0 2px var(--accent);
+            box-shadow: 0 0 0 2px var(--accent), 0 0 10px rgba(255,226,72,.8);
             z-index: 1;
         }
         .timeline-item .tl-date {
@@ -466,7 +540,7 @@
         }
         .research-card {
             background: var(--card);
-            border: 1px solid var(--border);
+            border: 3px solid var(--border);
             border-radius: var(--radius-sm);
             padding: 20px;
             transition: all var(--transition);
@@ -474,7 +548,7 @@
         }
         .research-card:hover {
             border-color: var(--accent);
-            transform: translateY(-3px);
+            transform: translateY(-5px) rotate(-.5deg);
             box-shadow: var(--shadow-lg);
         }
         .research-card .rc-icon {
@@ -522,6 +596,7 @@
             background: var(--accent-light);
             padding: 2px 10px;
             border-radius: 12px;
+            border: 2px solid #8dd6eb;
         }
         .news-dot {
             width: 6px; height: 6px;
@@ -570,7 +645,7 @@
             text-decoration: none;
             margin-right: 10px;
             padding: 4px 12px;
-            border: 1px solid var(--accent);
+            border: 2px solid var(--accent);
             border-radius: 14px;
             transition: all var(--transition);
             font-weight: 500;
@@ -600,7 +675,8 @@
         }
         .contact-item {
             padding: 14px 16px;
-            background: var(--bg-secondary);
+            background: linear-gradient(145deg, #f8fff0, #e1f9ff);
+            border: 2px solid #9cdaea;
             border-radius: var(--radius-xs);
             transition: all var(--transition);
         }
@@ -643,7 +719,7 @@
             padding: 48px 0 36px;
             color: var(--text-muted);
             font-size: 0.84rem;
-            border-top: 1px solid var(--border-light);
+            border-top: 3px dashed rgba(30,151,193,.35);
             margin-top: 20px;
         }
         footer .heart {
@@ -681,12 +757,12 @@
             top: 22px;
             background: #fff;
             color: #1a1a1a;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 3px 9px;
+            border: 3px solid #58c8eb;
+            border-radius: 16px;
+            padding: 5px 11px;
             font-size: 12px;
             white-space: nowrap;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+            box-shadow: inset 0 0 0 2px #fff, 0 4px 0 #299ac4, 0 8px 18px rgba(30,104,130,.18);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.18s ease, transform 0.18s ease;
@@ -703,7 +779,7 @@
             width: 44px; height: 44px;
             border-radius: 50%;
             background: var(--card);
-            border: 1px solid var(--border);
+            border: 3px solid var(--border);
             box-shadow: var(--shadow-md);
             display: flex;
             align-items: center;
@@ -739,6 +815,10 @@
             .nav-links a { font-size: 0.78rem; padding: 5px 10px; }
             .card { padding: 20px; }
             section { margin: 32px 0; }
+            .container { padding-left: 14px; padding-right: 14px; }
+            .hero { margin-top: 18px; padding-left: 18px; padding-right: 18px; }
+            .section-header { margin-left: 10px; }
+            .section-header h2 { padding: 3px 14px; font-size: 1.08rem; }
         }
     </style>
     <!-- jsVectorMap CSS -->
@@ -1107,32 +1187,18 @@
             function draw(){
                 ctx.clearRect(0, 0, W, H);
                 const dark = isDark();
-                const rgb = dark ? '200,205,235' : '110,95,200';
+                const rgb = dark ? '187,236,255' : '20,174,222';
                 for (let i = 0; i < particles.length; i++){
                     const p = particles[i];
                     p.x += p.vx; p.y += p.vy;
                     if (p.x < 0 || p.x > W) p.vx *= -1;
                     if (p.y < 0 || p.y > H) p.vy *= -1;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(Math.PI / 4);
                     ctx.fillStyle = 'rgba(' + rgb + ',' + (dark ? 0.55 : 0.45) + ')';
-                    ctx.fill();
-                }
-                const LINK = 130;
-                for (let i = 0; i < particles.length; i++){
-                    for (let j = i + 1; j < particles.length; j++){
-                        const a = particles[i], b = particles[j];
-                        const dx = a.x - b.x, dy = a.y - b.y;
-                        const d2 = dx*dx + dy*dy;
-                        if (d2 < LINK*LINK){
-                            const alpha = (1 - Math.sqrt(d2)/LINK) * (dark ? 0.22 : 0.16);
-                            ctx.beginPath();
-                            ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
-                            ctx.strokeStyle = 'rgba(' + rgb + ',' + alpha + ')';
-                            ctx.lineWidth = 1;
-                            ctx.stroke();
-                        }
-                    }
+                    ctx.fillRect(-p.r, -p.r, p.r * 2, p.r * 2);
+                    ctx.restore();
                 }
                 const mr = 160;
                 for (let i = 0; i < particles.length; i++){
@@ -1322,55 +1388,56 @@
             const ctx = canvas.getContext('2d');
             ctx.imageSmoothingEnabled = true;
             const W = canvas.width, H = canvas.height;
-            const dimoImage = new Image();
-            let dimoReady = false;
-            dimoImage.onload = () => { dimoReady = true; };
-            dimoImage.src = 'assets/dimo-pet.png';
+            function loadPetImage(src) {
+                const image = new Image();
+                image.src = src;
+                return image;
+            }
+            const dimoImages = {
+                move: loadPetImage('assets/dimo-pet.png'),
+                sit: loadPetImage('assets/dimo-sit.png'),
+                sleep: loadPetImage('assets/dimo-sleep.png')
+            };
 
-            function renderDimo(facing, bob, rotation, scale, sleeping) {
+            function renderDimo(image, facing, bob, rotation, scale, sleeping, shadowScale) {
                 ctx.clearRect(0, 0, W, H);
-                if (!dimoReady) return;
+                if (!image.complete || !image.naturalWidth) return;
 
                 ctx.save();
-                ctx.globalAlpha = sleeping ? 0.72 : 0.22;
+                ctx.globalAlpha = sleeping ? 0.42 : 0.14;
                 ctx.fillStyle = '#4b5563';
                 ctx.beginPath();
-                ctx.ellipse(W * 0.5, H * 0.90, 38 * scale, 9 * scale, 0, 0, Math.PI * 2);
+                ctx.ellipse(W * 0.5, H * 0.90, 38 * scale * shadowScale, 9 * scale, 0, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
 
                 ctx.save();
                 ctx.translate(W / 2, H / 2 - 5 + bob);
-                if (facing === 'left') ctx.scale(-1, 1);
+                // The movement artwork natively faces left; flip it only when moving right.
+                if (facing === 'right') ctx.scale(-1, 1);
                 ctx.rotate(rotation);
                 ctx.scale(scale, scale);
-                ctx.drawImage(dimoImage, -W / 2, -H / 2, W, H);
+                const ratio = image.naturalWidth / image.naturalHeight;
+                const targetW = Math.min(W, H * ratio);
+                const targetH = targetW / ratio;
+                ctx.drawImage(image, -targetW / 2, -targetH / 2, targetW, targetH);
                 ctx.restore();
 
-                if (sleeping) {
-                    ctx.save();
-                    ctx.fillStyle = '#8094b3';
-                    ctx.font = 'bold 20px sans-serif';
-                    ctx.fillText('z', W - 44, 32);
-                    ctx.font = 'bold 28px sans-serif';
-                    ctx.fillText('Z', W - 26, 20);
-                    ctx.restore();
-                }
             }
 
             function drawDimo(facing, frame, tailSway, closedEyes) {
                 const bob = (frame ? -4 : 0) + Math.sin(tailSway) * 1.5;
-                const lean = facing === 'left' ? -0.025 : 0.025;
-                renderDimo(facing, bob, lean, closedEyes ? 0.97 : 1, false);
+                const lean = facing === 'left' ? 0.025 : -0.025;
+                renderDimo(dimoImages.move, facing, bob, lean, closedEyes ? 0.97 : 1, false, 1);
             }
 
             function drawSit(t) {
-                renderDimo(facing, Math.sin(t / 4) * 2, 0, 0.94, false);
+                renderDimo(dimoImages.sit, facing, Math.sin(t / 5) * 1.2 + 4, 0, 0.84, false, 0.74);
             }
 
             function drawSleep(closed) {
-                const breathe = 0.88 + Math.sin(performance.now() / 420) * 0.012;
-                renderDimo(facing, 7, facing === 'left' ? 0.08 : -0.08, breathe, closed);
+                const breathe = 0.84 + Math.sin(performance.now() / 520) * 0.012;
+                renderDimo(dimoImages.sleep, facing, 15, 0, breathe, true, 1.12);
             }
 
             const pet = document.getElementById('pixel-pet');
@@ -1380,7 +1447,7 @@
             let petX = 14, petY = 14; // container pos in px
             let vx = 0, vy = 0;
             let facing = 'right';
-            let mode = 'idle'; // walk, chase, sit, sleep
+            let mode = 'walk'; // walk, chase, sit, sleep
             let frame = 0, frameAcc = 0;
             let tailSway = 0;
             let lastModeChange = performance.now();
@@ -1389,15 +1456,23 @@
 
             function pickMode() {
                 const r = Math.random();
-                if (r < 0.55) mode = 'walk';
-                else if (r < 0.8) mode = 'sit';
+                if (r < 0.42) mode = 'walk';
+                else if (r < 0.64) mode = 'sit';
+                else if (r < 0.82) mode = 'sleep';
                 else mode = 'chase';
-                modeDuration = 3500 + Math.random() * 4000;
+                modeDuration = mode === 'sleep'
+                    ? 5500 + Math.random() * 3500
+                    : 3200 + Math.random() * 3800;
                 lastModeChange = performance.now();
                 if (mode === 'walk') {
                     vx = (Math.random() < 0.5 ? -1 : 1) * (0.4 + Math.random() * 0.4);
                     vy = 0;
-                } else { vx = 0; vy = 0; }
+                } else if (mode === 'chase') {
+                    vx = 0; vy = 0;
+                } else {
+                    vx = 0; vy = 0;
+                }
+                pet.dataset.mode = mode;
             }
 
             function showTip(text, ms) {
@@ -1406,7 +1481,7 @@
                 clearTimeout(showTip._t);
                 showTip._t = setTimeout(() => tip.classList.remove('show'), ms || 1800);
             }
-            const idleLines = ['我是迪莫~','光系精灵守护你','闪闪~','咕咕?','求摸摸','别盯我啦','又来啦','守护之光！'];
+            const idleLines = ['我是迪莫~', '光系精灵守护你', '闪闪~', '咕咕?', '求摸摸', '别盯我啦', '又来啦', '守护之光！'];
             setInterval(() => { if (Math.random() < 0.4) showTip(idleLines[(Math.random()*idleLines.length)|0]); }, 9000);
 
             pet.addEventListener('click', () => {
@@ -1414,7 +1489,8 @@
                 mode = 'sit';
                 modeDuration = 2500;
                 lastModeChange = performance.now();
-                showTip(['迪莫！','闪闪哒~','再摸摸~','光之守护!'][Math.floor(Math.random()*4)], 1500);
+                pet.dataset.mode = mode;
+                showTip(['迪莫！', '闪闪哒~', '再摸摸~', '光之守护!'][Math.floor(Math.random()*4)], 1500);
                 // rotate container quick hop effect
                 pet.style.transition = 'transform 0.25s';
                 pet.style.transform = 'translateY(-10px)';
@@ -1456,6 +1532,11 @@
                     if (vx < 0) facing = 'left'; else if (vx > 0) facing = 'right';
                 }
 
+                if (mode === 'sit' || mode === 'sleep') {
+                    vx = 0;
+                    vy = 0;
+                }
+
                 // move
                 petX += vx; topPos += vy;
                 // bounds
@@ -1479,6 +1560,18 @@
                 }
                 requestAnimationFrame(loop);
             }
+            window.__dimoPet = {
+                setMode(nextMode) {
+                    if (!['walk', 'chase', 'sit', 'sleep'].includes(nextMode)) return;
+                    mode = nextMode;
+                    vx = 0; vy = 0;
+                    if (mode === 'walk') vx = 0.65;
+                    modeDuration = 12000;
+                    lastModeChange = performance.now();
+                    pet.dataset.mode = mode;
+                },
+                getMode() { return mode; }
+            };
             pickMode();
             requestAnimationFrame(loop);
         })();
@@ -1486,3 +1579,7 @@
 
 </body>
 </html>
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            outline: 3px solid rgba(255,255,255,.9);
+            outline-offset: -8px;
