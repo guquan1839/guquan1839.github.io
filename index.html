@@ -1325,143 +1325,146 @@
             const ctx = canvas.getContext('2d');
             ctx.imageSmoothingEnabled = false;
             const W = 32, H = 32;
-            // Dimo palette (per Baidu Baike: body blue+white, ear tips & star-tail tips yellow, light pet)
-            const C = {
-                body: '#5BA7E0', bodyDark: '#3E82BD', bodyLight: '#8FCCF2',
-                face: '#FFFFFF', belly: '#EAF6FF',
-                earTip: '#FFD23F', star: '#FFD23F', starDark: '#E8B400',
-                eye: '#20304A', eyeShine: '#FFFFFF', cheek: '#FF9DB5',
-                nose: '#4A6B8A', outline: '#2E5A85', shadow: '#1E4060'
-            };
+            // Dimo (Dream) — 光系幼兽, 洛克王国. Colors per Baidu Baike:
+            //   body blue (#5BA7E0) + dark outline (#3E82BD),
+            //   face/belly white (#FFFFFF / highlight #EAF6FF),
+            //   ear tips & 5-star tail tip yellow (#FFD23F / shade #E8B400),
+            //   eyes dark navy (#20304A) w/ white shine, pink cheek (#FF9DB5), grey-blue nose (#4A6B8A).
 
-            // 4 directions × 2 walk frames + 1 sit + 1 sleep. All drawn procedurally with pixels.
+            // Pixel helpers
             function rect(x, y, w, h, c) { ctx.fillStyle = c; ctx.fillRect(x, y, w, h); }
 
-            // Dimo: quadruped light cub — blue body, white face/belly, yellow ear-tips & star-tail tips.
+            // ====== GBA/红宝石-style Dimo sprite, 32×32, clear silhouette ======
+            // body blue, face/belly white, ear tips + 5-star tail tip yellow (per Baidu Baike).
             function drawDimo(facing, frame, tailSway, closedEyes) {
                 ctx.clearRect(0, 0, W, H);
-                const flip = facing === 'left';
-                ctx.save();
-                if (flip) { ctx.translate(W, 0); ctx.scale(-1, 1); }
+                const bob = frame === 1 ? -1 : 0; // tiny hop walking step
+                const y0 = 4 + bob;
 
-                // ---- Body (quadruped, lying low) ----
-                rect(6, 17, 18, 8, C.body);                 // main blue body
-                rect(6, 19, 2, 6, C.bodyDark);               // left shade
-                rect(9, 21, 12, 4, C.belly);                  // white belly
-                rect(16, 17, 2, 2, C.bodyLight);              // back highlight
-                // light spots on back
-                rect(9, 17, 2, 1, C.bodyLight);
-                rect(13, 17, 2, 1, C.bodyLight);
-                // ---- Head (in front, right side) ----
-                rect(20, 13, 9, 9, C.body);                  // head block
-                rect(20, 14, 2, 8, C.bodyDark);              // head shade
-                rect(22, 15, 7, 6, C.face);                   // white face mask
-                // ---- Ears with yellow tips ----
-                rect(21, 10, 3, 3, C.body);                   // left ear base
-                rect(21, 9, 3, 2, C.earTip);                  // left ear yellow tip
-                rect(25, 10, 3, 3, C.body);                   // right ear base
-                rect(25, 9, 3, 2, C.earTip);                  // right ear yellow tip
-                // cheeks
-                rect(22, 18, 2, 1, C.cheek);
-                rect(26, 18, 2, 1, C.cheek);
-                // ---- Eyes ----
+                // --- Star tail (behind body) ---
+                const ty = y0 + 14 + Math.round(Math.sin(tailSway) * 1);
+                rect(27, ty, 3, 3, '#5BA7E0');
+                rect(27, ty + 2, 3, 1, '#3E82BD');
+                // 5-point star tip (readable as a star)
+                rect(30, ty - 1, 1, 6, '#FFD23F');
+                rect(29, ty,     3, 1, '#FFD23F');
+                rect(29, ty + 4, 3, 1, '#FFD23F');
+                rect(29, ty + 5, 3, 1, '#E8B400');
+                rect(31, ty + 1, 1, 3, '#E8B400');
+
+                // --- Head (front-facing, centered) ---
+                rect(10, y0, 12, 11, '#5BA7E0');
+                rect(10, y0 + 1, 1, 10, '#3E82BD');          // left outline
+                // white face mask
+                rect(12, y0 + 3, 8, 7, '#FFFFFF');
+                rect(13, y0 + 3, 6, 1, '#EAF6FF');
+
+                // --- Ears with yellow tips ---
+                rect(10, y0 - 3, 3, 3, '#5BA7E0'); rect(10, y0 - 4, 2, 1, '#3E82BD');
+                rect(10, y0 - 4, 3, 2, '#FFD23F'); rect(11, y0 - 5, 2, 1, '#FFE882');
+                rect(19, y0 - 3, 3, 3, '#5BA7E0'); rect(21, y0 - 4, 2, 1, '#3E82BD');
+                rect(19, y0 - 4, 3, 2, '#FFD23F'); rect(19, y0 - 5, 2, 1, '#FFD23F');
+
+                // --- Eyes (ruby-style black with white shine) ---
                 if (closedEyes) {
-                    rect(23, 16, 2, 1, C.eye);
-                    rect(27, 16, 2, 1, C.eye);
+                    rect(13, y0 + 6, 2, 1, '#20304A');
+                    rect(17, y0 + 6, 2, 1, '#20304A');
                 } else {
-                    rect(23, 15, 2, 2, C.eye);
-                    rect(27, 15, 2, 2, C.eye);
-                    rect(24, 15, 1, 1, C.eyeShine);
-                    rect(28, 15, 1, 1, C.eyeShine);
+                    rect(13, y0 + 5, 2, 3, '#20304A');
+                    rect(17, y0 + 5, 2, 3, '#20304A');
+                    rect(14, y0 + 5, 1, 1, '#FFFFFF');
+                    rect(18, y0 + 5, 1, 1, '#FFFFFF');
                 }
-                // nose
-                rect(25, 18, 2, 1, C.nose);
-                // mouth
-                rect(25, 19, 1, 1, C.nose);
-                rect(26, 19, 1, 1, C.nose);
-                // ---- Legs (walking animation) ----
+                // cheeks + nose + mouth
+                rect(12, y0 + 8, 1, 1, '#FF9DB5'); rect(19, y0 + 8, 1, 1, '#FF9DB5');
+                rect(15, y0 + 8, 2, 1, '#4A6B8A');
+                rect(15, y0 + 9, 1, 1, '#4A6B8A'); rect(16, y0 + 9, 1, 1, '#4A6B8A');
+
+                // --- Body (centered below head) ---
+                rect(8, y0 + 11, 16, 9, '#5BA7E0');
+                rect(8, y0 + 11, 1, 9, '#3E82BD');
+                rect(23, y0 + 11, 1, 9, '#3E82BD');
+                rect(11, y0 + 14, 10, 6, '#FFFFFF');          // belly
+                rect(12, y0 + 19, 8, 1, '#EAF6FF');
+
+                // --- Legs (2-frame walk) ---
                 if (frame === 0) {
-                    rect(8, 25, 3, 3, C.bodyDark);
-                    rect(13, 25, 3, 3, C.body);
-                    rect(17, 25, 3, 3, C.bodyDark);
-                    rect(22, 25, 3, 3, C.body);
+                    rect(9,  y0 + 20, 3, 3, '#5BA7E0'); rect(9,  y0 + 22, 3, 1, '#3E82BD');
+                    rect(14, y0 + 20, 3, 3, '#5BA7E0'); rect(14, y0 + 22, 3, 1, '#3E82BD');
+                    rect(19, y0 + 20, 3, 3, '#5BA7E0'); rect(19, y0 + 22, 3, 1, '#3E82BD');
+                    rect(21, y0 + 20, 3, 3, '#5BA7E0'); rect(21, y0 + 22, 3, 1, '#3E82BD');
                 } else {
-                    rect(7, 25, 3, 3, C.body);
-                    rect(14, 25, 3, 3, C.bodyDark);
-                    rect(16, 25, 3, 3, C.body);
-                    rect(23, 25, 3, 3, C.bodyDark);
+                    rect(8,  y0 + 20, 3, 3, '#5BA7E0'); rect(8,  y0 + 22, 3, 1, '#3E82BD');
+                    rect(13, y0 + 20, 3, 3, '#5BA7E0'); rect(13, y0 + 22, 3, 1, '#3E82BD');
+                    rect(18, y0 + 20, 3, 3, '#5BA7E0'); rect(18, y0 + 22, 3, 1, '#3E82BD');
+                    rect(22, y0 + 21, 3, 2, '#5BA7E0'); rect(22, y0 + 22, 3, 1, '#3E82BD');
                 }
-                // ---- Five-pointed star tail (left/back side) ----
-                const ty = 19 + Math.round(Math.sin(tailSway) * 2);
-                // tail stem
-                rect(3, ty, 3, 3, C.body);
-                rect(2, ty + 1, 2, 1, C.bodyDark);
-                // star tip (5-pixel star approximation)
-                rect(0, ty, 2, 2, C.star);
-                rect(1, ty - 1, 1, 1, C.star);
-                rect(1, ty + 2, 1, 1, C.starDark);
-                rect(2, ty, 1, 2, C.star);
-                rect(0, ty + 1, 1, 1, C.starDark);
-                ctx.restore();
             }
 
             function drawSit(t) {
                 ctx.clearRect(0, 0, W, H);
-                // sitting upright (front-facing, head up)
-                rect(7, 14, 18, 14, C.body);              // body
-                rect(7, 16, 3, 12, C.bodyDark);          // left shade
-                rect(11, 19, 10, 9, C.belly);             // belly
-                // head
-                rect(9, 6, 14, 11, C.body);
-                rect(9, 8, 14, 9, C.face);                // big white face
-                // ears + yellow tips
-                rect(9, 4, 3, 4, C.body); rect(9, 3, 3, 2, C.earTip);
-                rect(20, 4, 3, 4, C.body); rect(20, 3, 3, 2, C.earTip);
-                // cheeks
-                rect(10, 11, 2, 1, C.cheek); rect(20, 11, 2, 1, C.cheek);
+                const y0 = 2;
+                // Star tail behind (sways)
+                const tdy = Math.round(Math.sin(t / 6) * 1.5);
+                rect(25, y0 + 12 + tdy, 3, 3, '#5BA7E0');
+                rect(28, y0 + 11 + tdy, 3, 4, '#FFD23F');
+                rect(29, y0 + 10 + tdy, 1, 6, '#FFD23F');
+                rect(28, y0 + 12 + tdy, 3, 1, '#E8B400');
+                // Body (sitting upright)
+                rect(8, y0 + 13, 16, 11, '#5BA7E0');
+                rect(8, y0 + 13, 1, 11, '#3E82BD'); rect(23, y0 + 13, 1, 11, '#3E82BD');
+                rect(11, y0 + 15, 10, 8, '#FFFFFF');          // belly
+                rect(12, y0 + 22, 8, 1, '#EAF6FF');
+                rect(10, y0 + 24, 3, 2, '#5BA7E0'); rect(19, y0 + 24, 3, 2, '#5BA7E0'); // paws
+                // Head (front-facing)
+                rect(9, y0 + 1, 14, 11, '#5BA7E0');
+                rect(9, y0 + 2, 1, 10, '#3E82BD'); rect(22, y0 + 2, 1, 10, '#3E82BD');
+                rect(11, y0 + 4, 10, 7, '#FFFFFF');
+                rect(12, y0 + 4, 8, 1, '#EAF6FF');
+                // ears + tips
+                rect(9,  y0 - 2, 3, 3, '#5BA7E0'); rect(9, y0 - 3, 3, 2, '#FFD23F');
+                rect(20, y0 - 2, 3, 3, '#5BA7E0'); rect(20, y0 - 3, 3, 2, '#FFD23F');
                 // eyes
-                rect(12, 9, 2, 2, C.eye); rect(18, 9, 2, 2, C.eye);
-                rect(13, 9, 1, 1, C.eyeShine); rect(19, 9, 1, 1, C.eyeShine);
-                // nose + mouth
-                rect(15, 12, 2, 1, C.nose);
-                rect(14, 13, 1, 1, C.nose); rect(17, 13, 1, 1, C.nose);
-                // paws
-                rect(10, 26, 3, 2, C.body); rect(19, 26, 3, 2, C.body);
-                // swaying star tail behind
-                const tdy = Math.round(Math.sin(t / 6) * 2);
-                rect(24, 19 + tdy, 3, 3, C.body);
-                rect(26, 18 + tdy, 2, 2, C.star);
-                rect(28, 19 + tdy, 1, 1, C.starDark);
+                rect(12, y0 + 6, 2, 3, '#20304A'); rect(18, y0 + 6, 2, 3, '#20304A');
+                rect(13, y0 + 6, 1, 1, '#FFFFFF'); rect(19, y0 + 6, 1, 1, '#FFFFFF');
+                // cheeks + nose + mouth
+                rect(11, y0 + 9, 1, 1, '#FF9DB5'); rect(20, y0 + 9, 1, 1, '#FF9DB5');
+                rect(15, y0 + 9, 2, 1, '#4A6B8A');
+                rect(15, y0 + 10, 1, 1, '#4A6B8A'); rect(16, y0 + 10, 1, 1, '#4A6B8A');
             }
 
-            function drawSleep(closed) {
+function drawSleep(closed) {
                 ctx.clearRect(0, 0, W, H);
-                // curled sleeping (rounded body)
-                rect(5, 20, 22, 7, C.body);              // curled body
-                rect(5, 22, 3, 5, C.bodyDark);
-                rect(9, 22, 16, 4, C.belly);             // belly
-                // head resting on side
-                rect(7, 15, 11, 8, C.body);
-                rect(9, 16, 9, 6, C.face);               // white face
+                const y0 = 12;
+                // Curled body (rounded blob, ruby-style)
+                rect(5, y0, 22, 9, '#5BA7E0');
+                rect(5, y0 + 1, 1, 8, '#3E82BD'); rect(26, y0 + 1, 1, 8, '#3E82BD');
+                rect(8, y0 + 2, 16, 4, '#FFFFFF');          // belly
+                // Head resting (front)
+                rect(6, y0 - 5, 11, 8, '#5BA7E0');
+                rect(6, y0 - 4, 1, 7, '#3E82BD');
+                rect(8, y0 - 3, 8, 5, '#FFFFFF');            // face
                 // ears + tips
-                rect(8, 13, 3, 3, C.body); rect(8, 12, 3, 2, C.earTip);
-                rect(14, 13, 3, 3, C.body); rect(14, 12, 3, 2, C.earTip);
-                // closed eyes (lines)
-                rect(10, 18, 2, 1, C.eye);
-                rect(14, 18, 2, 1, C.eye);
+                rect(7, y0 - 7, 3, 2, '#5BA7E0'); rect(7, y0 - 8, 3, 1, '#FFD23F');
+                rect(13, y0 - 7, 3, 2, '#5BA7E0'); rect(13, y0 - 8, 3, 1, '#FFD23F');
+                // closed eyes (^_^)
+                rect(9, y0 - 1, 2, 1, '#20304A');
+                rect(13, y0 - 1, 2, 1, '#20304A');
                 // nose
-                rect(12, 20, 2, 1, C.nose);
-                // curled star tail
-                rect(23, 19, 3, 3, C.body);
-                rect(26, 18, 2, 2, C.star);
-                rect(28, 20, 1, 1, C.starDark);
+                rect(11, y0, 2, 1, '#4A6B8A');
+                // curled star tail (closes the circle)
+                rect(24, y0 + 2, 3, 3, '#5BA7E0');
+                rect(27, y0 + 1, 3, 4, '#FFD23F');
+                rect(28, y0,     1, 6, '#FFD23F');
+                rect(27, y0 + 4, 3, 1, '#E8B400');
                 // Z's
                 if (closed) {
                     ctx.fillStyle = '#8FA9C8';
                     ctx.font = '8px sans-serif';
-                    ctx.fillText('z', 22, 9 + Math.round(Math.sin(performance.now() / 300)) * 1);
-                    ctx.fillText('Z', 26, 5);
+                    ctx.fillText('z', 22, 5 - Math.round(Math.sin(performance.now() / 300)));
+                    ctx.fillText('Z', 26, 2);
                 }
+            }
             }
 
             const pet = document.getElementById('pixel-pet');
