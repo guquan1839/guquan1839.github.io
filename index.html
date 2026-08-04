@@ -447,21 +447,21 @@
         .section-header .icon::after {
             content: '';
             position: absolute;
-            width: 80px;
+            width: 72px;
             height: 72px;
-            left: 0;
-            bottom: -3px;
+            left: 4px;
+            bottom: 0;
             background: center / contain no-repeat;
             filter: drop-shadow(0 2px 0 rgba(0,92,130,.28));
             pointer-events: none;
         }
-        #about .section-header .icon::after { background-image: url('assets/dimo-pet.png'); }
-        #education .section-header .icon::after { background-image: url('assets/dimo-sit.png'); }
-        #research .section-header .icon::after { background-image: url('assets/dimo-sleep.png'); }
-        #news .section-header .icon::after { background-image: url('assets/section-experience.png'); background-size: 82px auto; }
-        #publications .section-header .icon::after { background-image: url('assets/dimo-click.png'); }
-        #contact .section-header .icon::after { background-image: url('assets/dimo-pet.png'); }
-        #visitors .section-header .icon::after { background-image: url('assets/dimo-sit.png'); }
+        #about .section-header .icon::after { background-image: url('assets/section-icon-1.webp'); }
+        #education .section-header .icon::after { background-image: url('assets/section-icon-2.webp'); }
+        #research .section-header .icon::after { background-image: url('assets/section-icon-3.webp'); }
+        #news .section-header .icon::after { background-image: url('assets/section-icon-4.webp'); }
+        #publications .section-header .icon::after { background-image: url('assets/section-icon-5.webp'); }
+        #contact .section-header .icon::after { background-image: url('assets/section-icon-6.webp'); }
+        #visitors .section-header .icon::after { background-image: url('assets/section-icon-7.webp'); }
 
         .card {
             background: var(--card);
@@ -757,7 +757,7 @@
             left: 14px;
             bottom: 14px;
             width: 104px;
-            height: 82px;
+            height: 81px;
             z-index: 102;
             pointer-events: auto;
             cursor: pointer;
@@ -1412,10 +1412,10 @@
                 return image;
             }
             const dimoImages = {
-                move: loadPetImage('assets/dimo-pet.png'),
-                sit: loadPetImage('assets/dimo-sit.png'),
-                sleep: loadPetImage('assets/dimo-sleep.png'),
-                click: loadPetImage('assets/dimo-click.png')
+                move: loadPetImage('assets/dimo-move.webp'),
+                sit: loadPetImage('assets/dimo-sit.webp'),
+                sleep: loadPetImage('assets/dimo-sleep.webp'),
+                click: loadPetImage('assets/dimo-click.webp')
             };
 
             function renderDimo(image, facing, bob, rotation, scale, sleeping, shadowScale) {
@@ -1451,23 +1451,23 @@
             }
 
             function drawSit(t) {
-                renderDimo(dimoImages.sit, facing, Math.sin(t / 5) * 1.2 + 4, 0, 0.84, false, 0.74);
+                renderDimo(dimoImages.sit, facing, Math.sin(t / 5) * 1.2, 0, 1, false, 0.9);
             }
 
             function drawSleep(closed) {
-                const breathe = 0.84 + Math.sin(performance.now() / 520) * 0.012;
-                renderDimo(dimoImages.sleep, facing, 15, 0, breathe, true, 1.12);
+                const breathe = 1 + Math.sin(performance.now() / 520) * 0.008;
+                renderDimo(dimoImages.sleep, facing, 0, 0, breathe, true, 1);
             }
 
             function drawClick(t) {
-                const bounce = Math.sin(t / 55) * 3;
-                renderDimo(dimoImages.click, facing, bounce, 0, 0.58, false, 0.92);
+                const bounce = Math.sin(t / 55) * 2;
+                renderDimo(dimoImages.click, facing, bounce, 0, 1, false, 1);
             }
 
             const pet = document.getElementById('pixel-pet');
             const tip = document.getElementById('pp-tip');
             let mouseX = window.innerWidth / 2, mouseY = window.innerHeight - 100;
-            const PET_W = 104, PET_H = 82;
+            const PET_W = 104, PET_H = 81;
             let petX = 14, petY = 14; // container pos in px
             let vx = 0, vy = 0;
             let facing = 'right';
