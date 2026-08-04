@@ -1426,29 +1426,36 @@
                 click: loadPetImage('assets/dimo-click.webp')
             };
 
-            function renderDimo(image, facing, bob, rotation, scale, sleeping, shadowScale) {
-                ctx.clearRect(0, 0, W, H);
-                if (!image.complete || !image.naturalWidth) return;
+function renderDimo(image, facing, bob, rotation, scale, sleeping, shadowScale) {
+            ctx.clearRect(0, 0, W, H);
+            if (!image.complete || !image.naturalWidth) return;
 
-                ctx.save();
-                ctx.globalAlpha = sleeping ? 0.42 : 0.14;
-                ctx.fillStyle = '#4b5563';
-                ctx.beginPath();
-                ctx.ellipse(W * 0.5, H * 0.90, 38 * scale * shadowScale, 9 * scale, 0, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
+            // shadow sits at the common baseline (bottom of every state)
+            ctx.save();
+            ctx.globalAlpha = sleeping ? 0.42 : 0.14;
+            ctx.fillStyle = '#4b5563';
+            ctx.beginPath();
+            ctx.ellipse(W * 0.5, H * 0.90, 38 * scale * shadowScale, 9 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
 
-                ctx.save();
-                ctx.translate(W / 2, H / 2 - 5 + bob);
-                // The movement artwork natively faces left; flip it only when moving right.
-                if (facing === 'right') ctx.scale(-1, 1);
-                ctx.rotate(rotation);
-                ctx.scale(scale, scale);
-                const ratio = image.naturalWidth / image.naturalHeight;
-                const targetW = Math.min(W, H * ratio);
-                const targetH = targetW / ratio;
-                ctx.drawImage(image, -targetW / 2, -targetH / 2, targetW, targetH);
-                ctx.restore();
+            ctx.save();
+            // Bottom-anchored fit: scale every state into W×H (contain), then place its
+            // BOTTOM at H - 4 (just above the shadow). This keeps the ground line identical
+            // across move / sit / sleep / click so切换状态不再出现"半个图".
+            const ratio = image.naturalWidth / image.naturalHeight;
+            let tW = W;
+            let tH = tW / ratio;
+            if (tH > H) { tH = H; tW = H * ratio; }
+            tW *= scale; tH *= scale;
+            // bottom anchor; small `bob` is upward hop only (never below ground)
+            const cx = W / 2;
+            const cy = H - 4 - tH / 2 - bob; // bob raises sprite for walk hop / bounce (never sinks below ground)
+            ctx.translate(cx, cy);
+            if (facing === 'right') ctx.scale(-1, 1);   // artwork natively faces left
+            ctx.rotate(rotation);
+            ctx.drawImage(image, -tW / 2, -tH / 2, tW, tH);
+            ctx.restore();
 
             }
 
