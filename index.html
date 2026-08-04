@@ -525,8 +525,28 @@
         .timeline-item {
             position: relative;
             padding-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
         .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-item .tl-content { flex: 1; min-width: 0; }
+        .timeline-item .tl-badge {
+            flex-shrink: 0;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px var(--accent), 0 4px 10px rgba(0,0,0,.18);
+            background: #fff;
+        }
+        .timeline-item .tl-badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
         .timeline-item::before {
             content: '';
             position: absolute;
@@ -845,6 +865,7 @@
             .hero { margin-top: 18px; padding-left: 18px; padding-right: 18px; }
             .section-header { margin-left: 10px; }
             .section-header h2 { padding: 3px 14px; font-size: 1.08rem; }
+            .timeline-item .tl-badge { width: 42px; height: 42px; border-width: 2px; }
         }
     </style>
     <!-- jsVectorMap CSS -->
@@ -955,9 +976,14 @@
             <div class="card">
                 <div class="timeline">
                     <div class="timeline-item">
-                        <div class="tl-date">2018.09 – 2022.06</div>
-                        <div class="tl-title"><span class="en-text">Bachelor in Engineering</span><span class="zh-text">工学学士</span></div>
-                        <div class="tl-desc"><span class="en-text">Taiyuan University of Technology</span><span class="zh-text">太原理工大学</span></div>
+                        <div class="tl-content">
+                            <div class="tl-date">2018.09 – 2022.06</div>
+                            <div class="tl-title"><span class="en-text">Bachelor in Engineering</span><span class="zh-text">工学学士</span></div>
+                            <div class="tl-desc"><span class="en-text">Taiyuan University of Technology</span><span class="zh-text">太原理工大学</span></div>
+                        </div>
+                        <div class="tl-badge" title="太原理工大学校徽">
+                            <img src="assets/xm.jpg" alt="太原理工大学校徽" loading="lazy">
+                        </div>
                     </div>
                 </div>
             </div>
