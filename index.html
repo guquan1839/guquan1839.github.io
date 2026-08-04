@@ -657,6 +657,47 @@
             50% { transform: scale(1); }
         }
 
+        /* ========== Pixel Pet (Cat) ========== */
+        #pixel-pet {
+            position: fixed;
+            left: 14px;
+            bottom: 14px;
+            width: 64px;
+            height: 64px;
+            z-index: 102;
+            pointer-events: auto;
+            cursor: pointer;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            animation: pp-in 0.8s ease-out both;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25));
+        }
+        @keyframes pp-in {
+            from { transform: translateY(40px) scale(0.6); opacity: 0; }
+            to   { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        #pixel-pet canvas { width: 100%; height: 100%; display: block; }
+        #pixel-pet .pp-tip {
+            position: absolute;
+            left: 70px;
+            top: 14px;
+            background: #fff;
+            color: #1a1a1a;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 3px 9px;
+            font-size: 12px;
+            white-space: nowrap;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+            transform: translateX(-4px);
+            font-family: "Inter", "Noto Sans SC", sans-serif;
+        }
+        #pixel-pet .pp-tip.show { opacity: 1; transform: translateX(0); }
+
         /* ========== Back to Top ========== */
         .back-to-top {
             position: fixed;
@@ -957,6 +998,12 @@
             <path d="M18 15l-6-6-6 6"/>
         </svg>
     </button>
+
+    <!-- ========== Pixel Pet (Cat) ========== -->
+    <div id="pixel-pet" role="button" aria-label="Pixel cat pet" title="摸摸我~">
+        <canvas id="pet-canvas" width="32" height="32"></canvas>
+        <div class="pp-tip" id="pp-tip">喵～</div>
+    </div>
 
     <!-- ========== Scripts ========== -->
     <script>
@@ -1270,8 +1317,227 @@
         })();
     </script>
 
-    <!-- ========== Live2D Waifu (pet widget) ========== -->
-    <script src="https://cdn.jsdelivr.net/npm/live2d-widgets@1.0.1/dist/autoload.js"></script>
+    <!-- ========== Pixel Pet (walking cat) — zero external dependencies ========== -->
+    <script>
+        (function () {
+            const canvas = document.getElementById('pet-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = false;
+            const W = 32, H = 32;
+            const COLORS = {
+                '#F4AFA0': '#F4AFA0', body: '#F4AFA0', bodyShade: '#E89182',
+                belly: '#FBE4DA', ear: '#F7B9C4', eye: '#2B2B2B', nose: '#F29DAD',
+                mouth: '#8A6D5B', stripe: '#E89182', outline: '#8B5A4A'
+            };
+
+            // 4 directions × 2 walk frames + 1 sit + 1 sleep. All drawn procedurally with pixels.
+            function rect(x, y, w, h, c) { ctx.fillStyle = c; ctx.fillRect(x, y, w, h); }
+
+            function drawCat(facing, frame, tailSway, closedEyes) {
+                ctx.clearRect(0, 0, W, H);
+                const flip = facing === 'left';
+                ctx.save();
+                if (flip) { ctx.translate(W, 0); ctx.scale(-1, 1); }
+
+                // Body (rounded block)
+                rect(7, 16, 16, 11, '#F4AFA0');                 // body main
+                rect(6, 18, 2, 7, '#E89182');                    // left shade
+                rect(8, 22, 14, 3, '#FBE4DA');                  // belly
+                // stripes
+                rect(10, 17, 2, 3, '#E89182');
+                rect(14, 17, 2, 3, '#E89182');
+                rect(18, 17, 2, 3, '#E89182');
+                // head
+                rect(9, 9, 12, 9, '#F4AFA0');
+                // ears
+                rect(9, 7, 3, 3, '#F4AFA0'); rect(10, 9, 2, 1, '#F7B9C4');
+                rect(18, 7, 3, 3, '#F4AFA0'); rect(18, 9, 2, 1, '#F7B9C4');
+                // eyes
+                if (closedEyes) {
+                    rect(11, 13, 2, 1, '#2B2B2B');
+                    rect(18, 13, 2, 1, '#2B2B2B');
+                } else {
+                    rect(11, 12, 2, 2, '#2B2B2B');
+                    rect(18, 12, 2, 2, '#2B2B2B');
+                    rect(12, 12, 1, 1, '#FFFFFF');
+                    rect(19, 12, 1, 1, '#FFFFFF');
+                }
+                // nose
+                rect(15, 14, 2, 1, '#F29DAD');
+                // mouth
+                rect(15, 15, 2, 1, '#8A6D5B');
+                // legs (walk animation)
+                const off = frame * 2;
+                if (frame === 0) {
+                    rect(9, 27, 3, 3, '#F4AFA0'); rect(19, 27, 3, 3, '#F4AFA0');
+                    rect(13, 27, 3, 2, '#F4AFA0'); rect(16, 27, 3, 2, '#F4AFA0');
+                } else {
+                    rect(8, 26, 3, 3, '#F4AFA0'); rect(20, 26, 3, 3, '#F4AFA0');
+                    rect(13, 28, 3, 2, '#F4AFA0'); rect(16, 28, 3, 2, '#F4AFA0');
+                }
+                // tail (sways)
+                const tx = 24, ty = 19;
+                const tdy = Math.round(Math.sin(tailSway) * 3);
+                rect(tx, ty + tdy, 2, 3, '#F4AFA0');
+                rect(tx + 2, ty + tdy - 2 + tdy, 2, 2, '#F4AFA0');
+                rect(tx + 4, ty + tdy - 4 + tdy, 1, 2, '#E89182');
+                ctx.restore();
+            }
+
+            function drawSit(frame) {
+                ctx.clearRect(0, 0, W, H);
+                rect(8, 14, 13, 14, '#F4AFA0');          // curled body
+                rect(7, 17, 2, 9, '#E89182');             // side shade
+                rect(11, 20, 9, 6, '#FBE4DA');            // belly
+                rect(8, 8, 12, 8, '#F4AFA0');             // head
+                rect(8, 6, 3, 3, '#F4AFA0'); rect(9, 8, 2, 1, '#F7B9C4'); // ear L
+                rect(17, 6, 3, 3, '#F4AFA0'); rect(17, 8, 2, 1, '#F7B9C4'); // ear R
+                rect(11, 11, 2, 2, '#2B2B2B');            // eye L
+                rect(17, 11, 2, 2, '#2B2B2B');            // eye R
+                rect(11, 11, 1, 1, '#FFFFFF'); rect(17, 11, 1, 1, '#FFFFFF'); // shine
+                rect(14, 13, 2, 1, '#F29DAD');            // nose
+                rect(14, 14, 2, 1, '#8A6D5B');            // mouth
+                rect(14, 16, 4, 2, '#8A6D5B');            // "w" mouth
+                const tdy = Math.round(Math.sin(frame / 6) * 2);
+                rect(21, 16 + tdy, 2, 4, '#F4AFA0');
+                rect(23, 14 + tdy, 2, 3, '#E89182');
+                // paws
+                rect(10, 26, 3, 2, '#F4AFA0');
+                rect(19, 26, 3, 2, '#F4AFA0');
+            }
+
+            function drawSleep(closed) {
+                ctx.clearRect(0, 0, W, H);
+                rect(6, 20, 20, 8, '#F4AFA0');              // curled body (sleeping)
+                rect(6, 22, 3, 6, '#E89182');
+                rect(9, 23, 14, 4, '#FBE4DA');
+                rect(9, 16, 12, 6, '#F4AFA0');              // head resting
+                rect(9, 14, 3, 3, '#F4AFA0'); rect(10, 16, 2, 1, '#F7B9C4');
+                rect(18, 14, 3, 3, '#F4AFA0'); rect(18, 16, 2, 1, '#F7B9C4');
+                rect(11, 18, 2, 1, '#2B2B2B');              // closed eyes (lines)
+                rect(18, 18, 2, 1, '#2B2B2B');
+                rect(14, 19, 2, 1, '#F29DAD');
+                rect(21, 18, 3, 2, '#F4AFA0');             // tail
+                rect(23, 20, 2, 2, '#E89182');
+                // Z's
+                if (closed) {
+                    ctx.fillStyle = '#9aa';
+                    ctx.font = '8px sans-serif';
+                    ctx.fillText('z', 24, 10 + Math.round(Math.sin(performance.now()/300))*1);
+                    ctx.fillText('Z', 27, 6);
+                }
+            }
+
+            const pet = document.getElementById('pixel-pet');
+            const tip = document.getElementById('pp-tip');
+            let mouseX = window.innerWidth / 2, mouseY = window.innerHeight - 100;
+            let petX = 14, petY = 14; // container pos in px
+            let vx = 0, vy = 0;
+            let facing = 'right';
+            let mode = 'idle'; // walk, chase, sit, sleep
+            let frame = 0, frameAcc = 0;
+            let tailSway = 0;
+            let lastModeChange = performance.now();
+            let modeDuration = 4000 + Math.random() * 3000;
+            let eyesClosedUntil = 0;
+
+            function pickMode() {
+                const r = Math.random();
+                if (r < 0.55) mode = 'walk';
+                else if (r < 0.8) mode = 'sit';
+                else mode = 'chase';
+                modeDuration = 3500 + Math.random() * 4000;
+                lastModeChange = performance.now();
+                if (mode === 'walk') {
+                    vx = (Math.random() < 0.5 ? -1 : 1) * (0.4 + Math.random() * 0.4);
+                    vy = 0;
+                } else { vx = 0; vy = 0; }
+            }
+
+            function showTip(text, ms) {
+                tip.textContent = text;
+                tip.classList.add('show');
+                clearTimeout(showTip._t);
+                showTip._t = setTimeout(() => tip.classList.remove('show'), ms || 1800);
+            }
+            const idleLines = ['喵～','喵呜~','咕咕?','求摸摸','(=^･ω･^=)','别盯我啦','又来看我啦','Meow~'];
+            setInterval(() => { if (Math.random() < 0.4) showTip(idleLines[(Math.random()*idleLines.length)|0]); }, 9000);
+
+            pet.addEventListener('click', () => {
+                eyesClosedUntil = performance.now() + 2000;
+                mode = 'sit';
+                modeDuration = 2500;
+                lastModeChange = performance.now();
+                showTip(['喵！','呼噜呼噜~','再摸摸~','喵呜!'][Math.floor(Math.random()*4)], 1500);
+                // rotate container quick hop effect
+                pet.style.transition = 'transform 0.25s';
+                pet.style.transform = 'translateY(-10px)';
+                setTimeout(() => { pet.style.transform = ''; }, 220);
+            });
+
+            window.addEventListener('pointermove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+            window.addEventListener('resize', () => {
+                petX = Math.min(petX, window.innerWidth - 80);
+                petY = Math.min(petY, window.innerHeight - 80);
+                pet.style.left = petX + 'px'; pet.style.bottom = ''; pet.style.top = (window.innerHeight - 64 - petY) + 'px';
+            });
+
+            // manage container position: we use left+top coords for free walking
+            pet.style.left = petX + 'px';
+            pet.style.bottom = '';
+            pet.style.top = (window.innerHeight - 78 + petY * 0) + 'px'; // start near bottom
+            let topPos = window.innerHeight - 78;
+
+            function loop(t) {
+                frameAcc += 16;
+                if (frameAcc > 180) { frame ^= 1; frameAcc = 0; }
+                tailSway += 0.06;
+
+                if (t - lastModeChange > modeDuration) pickMode();
+
+                // chase: walk toward mouse gently
+                if (mode === 'chase') {
+                    const cx = petX + 32, cy = topPos + 32;
+                    const dx = mouseX - cx, dy = mouseY - cy;
+                    const d = Math.hypot(dx, dy);
+                    if (d > 8) {
+                        const sp = 0.9;
+                        vx = (dx / d) * sp; vy = (dy / d) * sp;
+                        facing = dx < 0 ? 'left' : 'right';
+                    } else { vx = 0; vy = 0; }
+                }
+                if (mode === 'walk') {
+                    if (vx < 0) facing = 'left'; else if (vx > 0) facing = 'right';
+                }
+
+                // move
+                petX += vx; topPos += vy;
+                // bounds
+                const maxX = window.innerWidth - 70;
+                if (petX < 2) { petX = 2; vx = Math.abs(vx); facing = 'right'; }
+                if (petX > maxX) { petX = maxX; vx = -Math.abs(vx); facing = 'left'; }
+                const minY = 60, maxY = window.innerHeight - 70;
+                if (topPos < minY) { topPos = minY; vy = Math.abs(vy); }
+                if (topPos > maxY) { topPos = maxY; vy = -Math.abs(vy); }
+
+                pet.style.left = petX + 'px';
+                pet.style.top = topPos + 'px';
+
+                // draw
+                const closed = (eyesClosedUntil > t) || (Math.sin(t / 400) > 0.985);
+                if (mode === 'sit') drawSit(t / 100);
+                else if (mode === 'sleep') drawSleep(closed);
+                else {
+                    const moving = Math.abs(vx) > 0.05 || Math.abs(vy) > 0.05;
+                    drawCat(facing, moving ? frame : 0, tailSway, closed);
+                }
+                requestAnimationFrame(loop);
+            }
+            pickMode();
+            requestAnimationFrame(loop);
+        })();
+    </script>
 
 </body>
 </html>
