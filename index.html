@@ -323,6 +323,13 @@
             z-index: 1;
             user-select: none;
         }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
         .avatar-ring {
             position: absolute;
             inset: -6px;
@@ -759,6 +766,55 @@
             color: var(--accent);
         }
 
+        /* ========== Recommended Games ========== */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 14px;
+        }
+        .game-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            background: var(--card);
+            border: 3px solid var(--border);
+            border-radius: 14px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all var(--transition);
+            box-shadow: 0 3px 0 rgba(0,0,0,.08);
+        }
+        .game-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: 0 6px 14px rgba(0,0,0,.14);
+        }
+        .game-card .gc-emoji {
+            font-size: 2rem;
+            flex-shrink: 0;
+            filter: drop-shadow(0 2px 0 rgba(0,0,0,.12));
+        }
+        .game-card .gc-info { flex: 1; min-width: 0; }
+        .game-card .gc-name {
+            font-weight: 700;
+            font-size: 0.98rem;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+        .game-card .gc-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        .game-card .gc-arrow {
+            flex-shrink: 0;
+            color: var(--accent);
+            font-size: 1.1rem;
+            transition: transform var(--transition);
+        }
+        .game-card:hover .gc-arrow { transform: translateX(3px); }
+
         /* ========== Footer ========== */
         footer {
             text-align: center;
@@ -892,6 +948,7 @@
                 <a href="#research"><span class="en-text">Research</span><span class="zh-text">研究</span></a>
                 <a href="#publications"><span class="en-text">Publications</span><span class="zh-text">论文</span></a>
                 <a href="#contact"><span class="en-text">Contact</span><span class="zh-text">联系</span></a>
+                <a href="#games"><span class="en-text">Games</span><span class="zh-text">游戏</span></a>
                 <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light mode">
                     <!-- Sun icon -->
                     <svg id="sunIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -914,7 +971,7 @@
         <header class="hero">
             <div class="avatar-wrapper">
                 <div class="avatar-ring"></div>
-                <div class="avatar">谷</div>
+                <div class="avatar"><img src="assets/avatar.png" alt="Gu Quan"></div>
             </div>
             <h1>Gu Quan（谷权）</h1>
             <p class="subtitle"><span class="en-text">B.Eng. Graduate · Scientific Computing Enthusiast</span><span class="zh-text">工学学士 · 科学计算爱好者</span></p>
@@ -1116,6 +1173,44 @@
                 <p class="visitor-loc" id="visitor-loc">
                     <span class="en-text">📍 Locating current visitor…</span><span class="zh-text">📍 正在定位当前访客…</span>
                 </p>
+            </div>
+        </section>
+
+        <!-- ========== RECOMMENDED GAMES ========== -->
+        <section id="games">
+            <div class="section-header">
+                <div class="icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12h12M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z"/><circle cx="9" cy="9" r="1.2"/><circle cx="15" cy="9" r="1.2"/></svg>
+                </div>
+                <h2><span class="en-text">Recommended Games</span><span class="zh-text">推荐游戏</span></h2>
+            </div>
+            <div class="card">
+                <div class="games-grid">
+                    <a class="game-card" href="https://www.4399.com/flash/32979.htm" target="_blank" rel="noopener">
+                        <span class="gc-emoji">🐉</span>
+                        <span class="gc-info">
+                            <div class="gc-name"><span class="en-text">Roco Kingdom</span><span class="zh-text">洛克王国</span></div>
+                            <div class="gc-desc"><span class="en-text">Collect pets &amp; adventure in the magic world</span><span class="zh-text">收集精灵，在魔法王国冒险</span></div>
+                        </span>
+                        <span class="gc-arrow">→</span>
+                    </a>
+                    <a class="game-card" href="https://aoqi.100bt.com/" target="_blank" rel="noopener">
+                        <span class="gc-emoji">🏝️</span>
+                        <span class="gc-info">
+                            <div class="gc-name"><span class="en-text">Aobi Island</span><span class="zh-text">奥比岛</span></div>
+                            <div class="gc-desc"><span class="en-text">Build your home on a dreamy island</span><span class="zh-text">梦幻海岛上的家园养成</span></div>
+                        </span>
+                        <span class="gc-arrow">→</span>
+                    </a>
+                    <a class="game-card" href="https://kabu.4399.com/" target="_blank" rel="noopener">
+                        <span class="gc-emoji">🐵</span>
+                        <span class="gc-info">
+                            <div class="gc-name"><span class="en-text">Kabu Xiyou</span><span class="zh-text">卡布西游</span></div>
+                            <div class="gc-desc"><span class="en-text">Monster-collecting journey in the West</span><span class="zh-text">西游题材的精灵收集冒险</span></div>
+                        </span>
+                        <span class="gc-arrow">→</span>
+                    </a>
+                </div>
             </div>
         </section>
 
