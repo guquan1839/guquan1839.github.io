@@ -309,16 +309,12 @@
         .avatar {
             width: 120px;
             height: 120px;
-            border-radius: 20px;
-            background: var(--accent-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 3rem;
             font-weight: 700;
             color: #fff;
-            border: 5px solid #fff;
-            box-shadow: 0 0 0 4px #42c8ee, 0 8px 0 #168ebc, 0 13px 28px rgba(24,127,161,.24);
             position: relative;
             z-index: 1;
             user-select: none;
@@ -326,21 +322,8 @@
         .avatar img {
             width: 100%;
             height: 100%;
-            border-radius: 20px;
             object-fit: contain;
             display: block;
-        }
-        .avatar-ring {
-            position: absolute;
-            inset: -6px;
-            border-radius: 26px;
-            background: var(--accent-gradient);
-            opacity: 0.3;
-            animation: pulse-ring 3s ease-in-out infinite;
-        }
-        @keyframes pulse-ring {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.08); opacity: 0.1; }
         }
         .hero h1 {
             font-size: 2.6rem;
@@ -786,44 +769,6 @@
             50% { transform: scale(1); }
         }
 
-        /* ========== Dimo Pet ========== */
-        #pixel-pet {
-            position: fixed;
-            left: 14px;
-            bottom: 14px;
-            width: 104px;
-            height: 81px;
-            z-index: 102;
-            pointer-events: auto;
-            cursor: pointer;
-            animation: pp-in 0.8s ease-out both;
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25));
-        }
-        @keyframes pp-in {
-            from { transform: translateY(40px) scale(0.6); opacity: 0; }
-            to   { transform: translateY(0) scale(1); opacity: 1; }
-        }
-        #pixel-pet canvas { width: 100%; height: 100%; display: block; }
-        #pixel-pet .pp-tip {
-            position: absolute;
-            left: 110px;
-            top: 22px;
-            background: #fff;
-            color: #1a1a1a;
-            border: 3px solid #58c8eb;
-            border-radius: 16px;
-            padding: 5px 11px;
-            font-size: 12px;
-            white-space: nowrap;
-            box-shadow: inset 0 0 0 2px #fff, 0 4px 0 #299ac4, 0 8px 18px rgba(30,104,130,.18);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.18s ease, transform 0.18s ease;
-            transform: translateX(-4px);
-            font-family: "Inter", "Noto Sans SC", sans-serif;
-        }
-        #pixel-pet .pp-tip.show { opacity: 1; transform: translateX(0); }
-
         /* ========== Back to Top ========== */
         .back-to-top {
             position: fixed;
@@ -920,7 +865,6 @@
         <!-- ========== HERO ========== -->
         <header class="hero">
             <div class="avatar-wrapper">
-                <div class="avatar-ring"></div>
                 <div class="avatar"><img src="assets/avatar.png" alt="Gu Quan"></div>
             </div>
             <h1>Gu Quan（谷权）</h1>
@@ -1139,12 +1083,6 @@
             <path d="M18 15l-6-6-6 6"/>
         </svg>
     </button>
-
-    <!-- ========== Dimo Pet / 迪莫 ========== -->
-    <div id="pixel-pet" role="button" aria-label="Dimo pet" title="摸摸迪莫~">
-        <canvas id="pet-canvas" width="232" height="180"></canvas>
-        <div class="pp-tip" id="pp-tip">我是迪莫~</div>
-    </div>
 
     <!-- ========== Scripts ========== -->
     <script>
@@ -1444,216 +1382,4 @@
         })();
     </script>
 
-    <!-- ========== Dimo pet: reference artwork + original movement logic ========== -->
-    <script>
-        (function () {
-            const canvas = document.getElementById('pet-canvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            ctx.imageSmoothingEnabled = true;
-            const W = canvas.width, H = canvas.height;
-            function loadPetImage(src) {
-                const image = new Image();
-                image.src = src;
-                return image;
-            }
-            const dimoImages = {
-                move: loadPetImage('assets/dimo-move.webp'),
-                sit: loadPetImage('assets/dimo-sit.webp'),
-                sleep: loadPetImage('assets/dimo-sleep.webp'),
-                click: loadPetImage('assets/dimo-click.webp')
-            };
-
-function renderDimo(image, facing, bob, rotation, scale, sleeping, shadowScale) {
-            ctx.clearRect(0, 0, W, H);
-            if (!image.complete || !image.naturalWidth) return;
-
-            // shadow sits at the common baseline (bottom of every state)
-            ctx.save();
-            ctx.globalAlpha = sleeping ? 0.42 : 0.14;
-            ctx.fillStyle = '#4b5563';
-            ctx.beginPath();
-            ctx.ellipse(W * 0.5, H * 0.90, 38 * scale * shadowScale, 9 * scale, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-
-            ctx.save();
-            // Bottom-anchored fit: scale every state into W×H (contain), then place its
-            // BOTTOM at H - 4 (just above the shadow). This keeps the ground line identical
-            // across move / sit / sleep / click so切换状态不再出现"半个图".
-            const ratio = image.naturalWidth / image.naturalHeight;
-            let tW = W;
-            let tH = tW / ratio;
-            if (tH > H) { tH = H; tW = H * ratio; }
-            tW *= scale; tH *= scale;
-            // bottom anchor; small `bob` is upward hop only (never below ground)
-            const cx = W / 2;
-            const cy = H - 4 - tH / 2 - bob; // bob raises sprite for walk hop / bounce (never sinks below ground)
-            ctx.translate(cx, cy);
-            if (facing === 'right') ctx.scale(-1, 1);   // artwork natively faces left
-            ctx.rotate(rotation);
-            ctx.drawImage(image, -tW / 2, -tH / 2, tW, tH);
-            ctx.restore();
-
-            }
-
-            function drawDimo(facing, frame, tailSway, closedEyes) {
-                const bob = (frame ? -4 : 0) + Math.sin(tailSway) * 1.5;
-                const lean = facing === 'left' ? 0.025 : -0.025;
-                renderDimo(dimoImages.move, facing, bob, lean, closedEyes ? 0.97 : 1, false, 1);
-            }
-
-            function drawSit(t) {
-                renderDimo(dimoImages.sit, facing, Math.sin(t / 5) * 1.2, 0, 1, false, 0.9);
-            }
-
-            function drawSleep(closed) {
-                const breathe = 1 + Math.sin(performance.now() / 520) * 0.008;
-                renderDimo(dimoImages.sleep, facing, 0, 0, breathe, true, 1);
-            }
-
-            function drawClick(t) {
-                const bounce = Math.sin(t / 55) * 2;
-                renderDimo(dimoImages.click, facing, bounce, 0, 1, false, 1);
-            }
-
-            const pet = document.getElementById('pixel-pet');
-            const tip = document.getElementById('pp-tip');
-            let mouseX = window.innerWidth / 2, mouseY = window.innerHeight - 100;
-            const PET_W = 104, PET_H = 81;
-            let petX = 14, petY = 14; // container pos in px
-            let vx = 0, vy = 0;
-            let facing = 'right';
-            let mode = 'walk'; // walk, chase, sit, sleep, click
-            let frame = 0, frameAcc = 0;
-            let tailSway = 0;
-            let lastModeChange = performance.now();
-            let modeDuration = 4000 + Math.random() * 3000;
-            let eyesClosedUntil = 0;
-
-            function pickMode() {
-                const r = Math.random();
-                if (r < 0.42) mode = 'walk';
-                else if (r < 0.64) mode = 'sit';
-                else if (r < 0.82) mode = 'sleep';
-                else mode = 'chase';
-                modeDuration = mode === 'sleep'
-                    ? 5500 + Math.random() * 3500
-                    : 3200 + Math.random() * 3800;
-                lastModeChange = performance.now();
-                if (mode === 'walk') {
-                    vx = (Math.random() < 0.5 ? -1 : 1) * (0.4 + Math.random() * 0.4);
-                    vy = 0;
-                } else if (mode === 'chase') {
-                    vx = 0; vy = 0;
-                } else {
-                    vx = 0; vy = 0;
-                }
-                pet.dataset.mode = mode;
-            }
-
-            function showTip(text, ms) {
-                tip.textContent = text;
-                tip.classList.add('show');
-                clearTimeout(showTip._t);
-                showTip._t = setTimeout(() => tip.classList.remove('show'), ms || 1800);
-            }
-            const idleLines = ['我是迪莫~', '光系精灵守护你', '闪闪~', '咕咕?', '求摸摸', '别盯我啦', '又来啦', '守护之光！'];
-            setInterval(() => { if (Math.random() < 0.4) showTip(idleLines[(Math.random()*idleLines.length)|0]); }, 9000);
-
-            pet.addEventListener('click', () => {
-                eyesClosedUntil = performance.now() + 2000;
-                mode = 'click';
-                modeDuration = 2500;
-                lastModeChange = performance.now();
-                pet.dataset.mode = mode;
-                showTip(['迪莫！', '闪闪哒~', '再摸摸~', '光之守护!'][Math.floor(Math.random()*4)], 1500);
-                // rotate container quick hop effect
-                pet.style.transition = 'transform 0.25s';
-                pet.style.transform = 'translateY(-10px)';
-                setTimeout(() => { pet.style.transform = ''; }, 220);
-            });
-
-            window.addEventListener('pointermove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-            window.addEventListener('resize', () => {
-                petX = Math.min(petX, window.innerWidth - PET_W - 8);
-                petY = Math.min(petY, window.innerHeight - PET_H - 8);
-                pet.style.left = petX + 'px'; pet.style.bottom = ''; pet.style.top = (window.innerHeight - PET_H - petY) + 'px';
-            });
-
-            // manage container position: we use left+top coords for free walking
-            pet.style.left = petX + 'px';
-            pet.style.bottom = '';
-            pet.style.top = (window.innerHeight - PET_H - 14) + 'px'; // start near bottom
-            let topPos = window.innerHeight - PET_H - 14;
-
-            function loop(t) {
-                frameAcc += 16;
-                if (frameAcc > 180) { frame ^= 1; frameAcc = 0; }
-                tailSway += 0.06;
-
-                if (t - lastModeChange > modeDuration) pickMode();
-
-                // chase: walk toward mouse gently
-                if (mode === 'chase') {
-                    const cx = petX + PET_W / 2, cy = topPos + PET_H / 2;
-                    const dx = mouseX - cx, dy = mouseY - cy;
-                const d = Math.hypot(dx, dy);
-                    if (d > 8) {
-                        const sp = 0.9;
-                        vx = (dx / d) * sp; vy = (dy / d) * sp;
-                        facing = dx < 0 ? 'left' : 'right';
-                    } else { vx = 0; vy = 0; }
-                }
-                if (mode === 'walk') {
-                    if (vx < 0) facing = 'left'; else if (vx > 0) facing = 'right';
-                }
-
-                if (mode === 'sit' || mode === 'sleep' || mode === 'click') {
-                    vx = 0;
-                    vy = 0;
-                }
-
-                // move
-                petX += vx; topPos += vy;
-                // bounds
-                const maxX = window.innerWidth - PET_W - 4;
-                if (petX < 2) { petX = 2; vx = Math.abs(vx); facing = 'right'; }
-                if (petX > maxX) { petX = maxX; vx = -Math.abs(vx); facing = 'left'; }
-                const minY = 60, maxY = window.innerHeight - PET_H - 4;
-                if (topPos < minY) { topPos = minY; vy = Math.abs(vy); }
-                if (topPos > maxY) { topPos = maxY; vy = -Math.abs(vy); }
-
-                pet.style.left = petX + 'px';
-                pet.style.top = topPos + 'px';
-
-                // draw
-                const closed = (eyesClosedUntil > t) || (Math.sin(t / 400) > 0.985);
-                if (mode === 'click') drawClick(t);
-                else if (mode === 'sit') drawSit(t / 100);
-                else if (mode === 'sleep') drawSleep(closed);
-                else {
-                    const moving = Math.abs(vx) > 0.05 || Math.abs(vy) > 0.05;
-                    drawDimo(facing, moving ? frame : 0, tailSway, closed);
-                }
-                requestAnimationFrame(loop);
-            }
-            window.__dimoPet = {
-                setMode(nextMode) {
-                    if (!['walk', 'chase', 'sit', 'sleep'].includes(nextMode)) return;
-                    mode = nextMode;
-                    vx = 0; vy = 0;
-                    if (mode === 'walk') vx = 0.65;
-                    modeDuration = 12000;
-                    lastModeChange = performance.now();
-                    pet.dataset.mode = mode;
-                },
-                getMode() { return mode; }
-            };
-            pickMode();
-            requestAnimationFrame(loop);
-        })();
-    </script>
-
-</body>
 </html>
