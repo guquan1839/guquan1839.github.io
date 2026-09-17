@@ -404,62 +404,37 @@
 
         .section-header {
             display: flex;
-            align-items: flex-end;   /* bottom-align title & icon so they sit on the same baseline */
-            gap: 0;
-            margin: 0 18px -8px;
+            align-items: center;
+            gap: 16px;
+            margin: 0 22px -14px;
             position: relative;
             z-index: 2;
-            min-height: 92px;
         }
-        .section-header .icon {
-            width: 100px; height: 88px;
-            border-radius: 0;
-            background: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: transparent;
-            border: 0;
-            box-shadow: none;
-            flex-shrink: 0;
-        }
-        .section-header .icon svg { display: none; }
         .section-header h2 {
-            font-size: 1.25rem;
+            flex: 0 0 auto;
+            font-size: 1.2rem;
             font-weight: 700;
             letter-spacing: -0.3px;
             color: #ffe62f;
             background: linear-gradient(#5ed1e8, #35b9d8);
             border: 3px solid #159ac0;
-            border-radius: 8px;
-            padding: 8px 22px;
+            border-radius: 999px;
+            padding: 7px 26px;
             text-shadow: 2px 2px 0 #7a7400, 0 1px 0 #fff7a2;
             /* order: inset shine (top), uniform gold outer ring (middle), blue drop shadow (bottom layer) */
             box-shadow: inset 0 0 0 2px rgba(255,255,255,.72), 0 0 0 3px #ffe64d, 0 4px 0 #167fa1;
             text-align: center;
+            white-space: nowrap;
         }
-
-        .section-header .icon {
-            position: relative;
-        }
-        .section-header .icon::after {
+        /* dashed rule trailing the title chip, keeps the row visually balanced */
+        .section-header::after {
             content: '';
-            position: absolute;
-            width: 88px;
-            height: 88px;
-            left: 6px;
-            bottom: 0;
-            background: center / contain no-repeat;
-            filter: drop-shadow(0 2px 0 rgba(0,92,130,.28));
-            pointer-events: none;
+            flex: 1 1 auto;
+            min-width: 28px;
+            height: 4px;
+            border-radius: 2px;
+            background-image: repeating-linear-gradient(to right, rgba(53,185,216,.7) 0 12px, transparent 12px 22px);
         }
-        #about .section-header .icon::after { background-image: url('assets/section-icon-1.webp'); }
-        #education .section-header .icon::after { background-image: url('assets/section-icon-2.webp'); }
-        #research .section-header .icon::after { background-image: url('assets/section-icon-3.webp'); }
-        #news .section-header .icon::after { background-image: url('assets/section-icon-4.webp'); }
-        #publications .section-header .icon::after { background-image: url('assets/section-icon-5.webp'); }
-        #contact .section-header .icon::after { background-image: url('assets/section-icon-6.webp'); }
-        #visitors .section-header .icon::after { background-image: url('assets/section-icon-7.webp'); }
 
         .card {
             background: var(--card);
@@ -514,17 +489,18 @@
         }
         .timeline-item {
             position: relative;
-            padding-bottom: 24px;
+            padding-bottom: 22px;
             display: flex;
-            align-items: center;
-            gap: 16px;
+            align-items: flex-start;
+            gap: 18px;
         }
         .timeline-item:last-child { padding-bottom: 0; }
         .timeline-item .tl-content { flex: 1; min-width: 0; }
         .timeline-item .tl-badge {
             flex-shrink: 0;
-            width: 56px;
-            height: 56px;
+            align-self: flex-start;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             overflow: hidden;
             border: 3px solid #fff;
@@ -551,21 +527,27 @@
             z-index: 1;
         }
         .timeline-item .tl-date {
-            font-size: 0.8rem;
+            display: inline-block;
+            font-size: 0.78rem;
             color: var(--accent);
             font-weight: 600;
-            margin-bottom: 2px;
             font-family: "JetBrains Mono", "SF Mono", monospace;
+            background: var(--accent-light);
+            border: 2px solid #8dd6eb;
+            border-radius: 12px;
+            padding: 2px 10px;
+            margin-bottom: 8px;
         }
         .timeline-item .tl-title {
-            font-weight: 600;
-            font-size: 0.95rem;
+            font-weight: 700;
+            font-size: 1rem;
+            line-height: 1.4;
             color: var(--text);
         }
         .timeline-item .tl-desc {
-            font-size: 0.85rem;
+            font-size: 0.87rem;
             color: var(--text-secondary);
-            margin-top: 2px;
+            margin-top: 3px;
         }
 
         /* ========== Research Interests ========== */
@@ -815,12 +797,9 @@
             section { margin: 32px 0; }
             .container { padding-left: 14px; padding-right: 14px; }
             .hero { margin-top: 18px; padding-left: 18px; padding-right: 18px; }
-            .section-header { margin-left: 10px; }
-            .section-header h2 { padding: 3px 14px; font-size: 1.08rem; }
+            .section-header { margin: 0 14px -12px; gap: 10px; }
+            .section-header h2 { padding: 5px 16px; font-size: 1.05rem; }
             .timeline-item .tl-badge { width: 42px; height: 42px; border-width: 2px; }
-            .section-header .icon { width: 72px; height: 64px; }
-            .section-header .icon::after { width: 64px; height: 64px; left: 4px; }
-            .section-header { min-height: 70px; }
         }
     </style>
     <!-- jsVectorMap CSS -->
@@ -899,9 +878,6 @@
         <!-- ========== ABOUT ========== -->
         <section id="about">
             <div class="section-header">
-                <div class="icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-                </div>
                 <h2><span class="en-text">About Me</span><span class="zh-text">关于我</span></h2>
             </div>
             <div class="card">
@@ -921,9 +897,6 @@
         <!-- ========== EDUCATION ========== -->
         <section id="education">
             <div class="section-header">
-                <div class="icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>
-                </div>
                 <h2><span class="en-text">Education</span><span class="zh-text">教育背景</span></h2>
             </div>
             <div class="card">
@@ -945,9 +918,6 @@
         <!-- ========== RESEARCH INTERESTS ========== -->
         <section id="research">
             <div class="section-header">
-                <div class="icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-                </div>
                 <h2><span class="en-text">Research Interests</span><span class="zh-text">研究方向</span></h2>
             </div>
             <div class="research-grid">
@@ -972,9 +942,6 @@
         <!-- ========== NEWS ========== -->
         <section id="news">
             <div class="section-header">
-                <div class="icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                </div>
                 <h2><span class="en-text">News</span><span class="zh-text">动态</span></h2>
             </div>
             <div class="card">
@@ -994,9 +961,6 @@
         <!-- ========== PUBLICATIONS ========== -->
         <section id="publications">
             <div class="section-header">
-                <div class="icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                </div>
                 <h2><span class="en-text">Publications</span><span class="zh-text">发表论文</span></h2>
             </div>
             <div class="card">
@@ -1026,9 +990,6 @@
         <!-- ========== CONTACT ========== -->
         <section id="contact">
             <div class="section-header">
-                <div class="icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                </div>
                 <h2><span class="en-text">Contact</span><span class="zh-text">联系方式</span></h2>
             </div>
             <div class="card">
@@ -1056,9 +1017,6 @@
         <!-- ========== VISITOR MAP ========== -->
         <section id="visitors">
             <div class="section-header">
-                <div class="icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                </div>
                 <h2><span class="en-text">Visitor Map</span><span class="zh-text">访客地图</span></h2>
             </div>
             <div class="card">
