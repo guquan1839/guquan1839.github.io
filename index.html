@@ -722,6 +722,69 @@
             box-shadow: var(--shadow-lg);
         }
 
+        /* ========== DeepSeek Whale Girl Mascot ========== */
+        .whale-mascot {
+            position: fixed;
+            right: 20px;
+            bottom: 16px;
+            width: 119px;
+            padding: 0;
+            border: 0;
+            background: none;
+            font: inherit;
+            cursor: pointer;
+            z-index: 98;
+            -webkit-tap-highlight-color: transparent;
+            filter: drop-shadow(0 7px 10px rgba(18, 92, 120, .28));
+        }
+        .whale-mascot img {
+            display: block;
+            width: 100%;
+            height: auto;
+            transform-origin: 50% 100%;
+            animation: whale-bob 3.8s ease-in-out infinite;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        .whale-mascot.jump { animation: whale-jump .62s cubic-bezier(.32,.86,.42,1); }
+        .whale-mascot:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 8px;
+            border-radius: 14px;
+        }
+        @keyframes whale-bob {
+            0%, 100% { transform: translateY(0) rotate(-1.4deg); }
+            50% { transform: translateY(-8px) rotate(1.4deg); }
+        }
+        @keyframes whale-jump {
+            0%, 100% { transform: translateY(0) scale(1, 1); }
+            25% { transform: translateY(0) scale(1.07, .93); }
+            52% { transform: translateY(-24px) scale(.96, 1.04); }
+            78% { transform: translateY(0) scale(1.05, .95); }
+        }
+        .whale-bubble {
+            position: absolute;
+            right: 4px;
+            bottom: calc(100% + 10px);
+            width: max-content;
+            max-width: min(220px, calc(100vw - 120px));
+            padding: 9px 13px;
+            border: 3px solid var(--border);
+            border-radius: 16px 16px 4px 16px;
+            background: var(--card);
+            color: var(--text-secondary);
+            box-shadow: var(--shadow);
+            font-size: .82rem;
+            line-height: 1.55;
+            text-align: left;
+            opacity: 0;
+            transform: translateY(8px) scale(.95);
+            transform-origin: bottom right;
+            transition: opacity .2s ease, transform .2s ease;
+            pointer-events: none;
+        }
+        .whale-bubble.show { opacity: 1; transform: translateY(0) scale(1); }
+
         /* ========== Responsive ========== */
         @media (max-width: 640px) {
             .hero { padding: 48px 0 32px; }
@@ -739,6 +802,12 @@
             .section-header { margin: 0 14px -12px; gap: 10px; }
             .section-header h2 { padding: 5px 16px; font-size: 1.05rem; }
             .timeline-item .tl-badge { width: 42px; height: 42px; border-width: 2px; }
+            .whale-mascot { width: 92px; right: 14px; bottom: 10px; }
+            .whale-bubble { max-width: 62vw; font-size: .78rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .whale-mascot,
+            .whale-mascot img { animation: none; }
         }
     </style>
     <!-- jsVectorMap CSS -->
@@ -820,10 +889,10 @@
             </div>
             <div class="card">
                 <p class="about-text">
-                    <span class="en-text">My research focuses on <strong>Neural Operators</strong> and <strong>Physics-Informed Neural Networks (PINNs)</strong>,
-                    aiming to develop efficient data-driven methods for solving partial differential equations.</span>
-                    <span class="zh-text">我的研究方向是<strong>神经算子（Neural Operators）</strong>与<strong>物理信息神经网络（PINNs）</strong>，
-                    致力于开发高效的数据驱动方法求解偏微分方程。</span>
+                    <span class="en-text">My research focuses on <strong>Neural Operators</strong> and <strong>image segmentation / reconstruction</strong>,
+                    aiming to develop efficient data-driven methods for both PDE solving and image understanding.</span>
+                    <span class="zh-text">我的研究方向是<strong>神经算子（Neural Operators）</strong>与<strong>图像分割 / 重建</strong>，
+                    致力于开发高效的数据驱动方法，兼顾偏微分方程求解与图像理解任务。</span>
                 </p>
                 <div class="highlight-box">
                     <span class="en-text"><span class="emoji">📬</span> <strong>Get in touch:</strong> Feel free to reach out via email — looking forward to connecting!</span>
@@ -860,9 +929,9 @@
             </div>
             <div class="research-grid">
                 <div class="research-card">
-                    <div class="rc-icon">🧠</div>
-                    <div class="rc-tag">PINN</div>
-                    <div class="rc-desc"><span class="en-text">A universal function approximator that embeds physical laws (given as PDEs) into the network loss as regularization, generalizing well even with scarce data</span><span class="zh-text">一种通用函数近似器，将以偏微分方程描述的物理定律嵌入网络损失作为正则化约束，即使数据稀缺也能良好泛化</span></div>
+                    <div class="rc-icon">🖼️</div>
+                    <div class="rc-tag"><span class="en-text">Image Segmentation / Reconstruction</span><span class="zh-text">图像分割 / 重建</span></div>
+                    <div class="rc-desc"><span class="en-text">Pixel-level segmentation and high-quality image reconstruction with deep networks, covering medical and remote-sensing imagery while balancing accuracy and inference cost</span><span class="zh-text">用深度网络完成像素级目标分割与高质量图像重建，面向医学影像、遥感影像等场景，兼顾精度与推理开销</span></div>
                 </div>
                 <div class="research-card">
                     <div class="rc-icon">🔗</div>
@@ -943,6 +1012,17 @@
 
     </div>
 
+    <!-- ========== DeepSeek Whale Girl Mascot ==========
+         Artwork: "大肥鱼" whale girl front sprite from 1190fasheqi/dafeiyu-pet (MIT License).
+         Source: https://github.com/1190fasheqi/dafeiyu-pet/tree/main/sprites -->
+    <button class="whale-mascot" id="whaleMascot" type="button"
+            aria-label="和 DeepSeek 鲸鱼娘打个招呼 / Say hi to the DeepSeek whale girl">
+        <span class="whale-bubble" id="whaleBubble" role="status" aria-live="polite"></span>
+        <img src="assets/whale-girl.png"
+             srcset="assets/whale-girl.png 1x, assets/whale-girl@2x.png 2x"
+             alt="DeepSeek 鲸鱼娘大肥鱼" width="119" height="159" draggable="false">
+    </button>
+
     <!-- ========== Back to Top Button ========== -->
     <button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1012,6 +1092,55 @@
         backToTop.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+
+        // ========== Whale Girl Mascot ==========
+        (function(){
+            const mascot = document.getElementById('whaleMascot');
+            const bubble = document.getElementById('whaleBubble');
+            if (!mascot || !bubble) return;
+
+            const lines = [
+                { zh: '我是大肥鱼，DeepSeek 的鲸鱼娘～有事戳我一下！', en: 'I am Dafeiyu, the DeepSeek whale girl — poke me anytime!' },
+                { zh: '今天也在解偏微分方程吗？🐋', en: 'Solving PDEs again today? 🐋' },
+                { zh: '分割 mask 不干净？先检查一下数据增强。', en: 'Messy segmentation masks? Check your data augmentation first.' },
+                { zh: '摸鱼一会儿也没关系，我本来就是鲸鱼。', en: 'Slacking off a little is fine — I am a whale after all.' },
+                { zh: '研究顺利！需要我的时候记得喊一声。', en: 'Good luck with research! Call me whenever you need.' }
+            ];
+            let idx = 0;
+            let hideTimer = null;
+
+            const say = (text) => {
+                bubble.textContent = text;
+                bubble.classList.add('show');
+                clearTimeout(hideTimer);
+                hideTimer = setTimeout(() => bubble.classList.remove('show'), 4500);
+            };
+
+            const poke = () => {
+                const lang = document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'zh';
+                say(lines[idx % lines.length][lang]);
+                idx += 1;
+                mascot.classList.remove('jump');
+                void mascot.offsetWidth;
+                mascot.classList.add('jump');
+            };
+
+            mascot.addEventListener('click', poke);
+            mascot.addEventListener('animationend', (e) => {
+                if (e.animationName === 'whale-jump') mascot.classList.remove('jump');
+            });
+            mascot.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    poke();
+                }
+            });
+
+            if (!sessionStorage.getItem('whaleGreeted')) {
+                sessionStorage.setItem('whaleGreeted', '1');
+                setTimeout(poke, 1800);
+            }
+        })();
 
         // Navbar shadow on scroll
         const navbar = document.querySelector('.navbar');
