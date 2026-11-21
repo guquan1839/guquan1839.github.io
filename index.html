@@ -1034,17 +1034,21 @@
         const langToggle = document.getElementById('langToggle');
         const html = document.documentElement;
 
-        // Default to Chinese; check saved preference
-        const savedLang = localStorage.getItem('lang') || 'zh-CN';
-        html.setAttribute('lang', savedLang);
-        langToggle.textContent = savedLang === 'zh-CN' ? 'EN' : '中';
+        // Button shows the *current* language (中 / EN), matching page content
+        const applyLang = (lang) => {
+            html.setAttribute('lang', lang);
+            langToggle.textContent = lang === 'zh-CN' ? '中' : 'EN';
+            langToggle.setAttribute('aria-label', lang === 'zh-CN' ? '切换到英文' : 'Switch to Chinese');
+            langToggle.title = lang === 'zh-CN' ? '当前：中文（点击切换英文）' : 'Current: English (click for 中文)';
+            localStorage.setItem('lang', lang);
+            window.dispatchEvent(new CustomEvent('langchange', { detail: { lang } }));
+        };
+
+        applyLang(localStorage.getItem('lang') || 'zh-CN');
 
         langToggle.addEventListener('click', () => {
             const currentLang = html.getAttribute('lang');
-            const newLang = currentLang === 'zh-CN' ? 'en' : 'zh-CN';
-            html.setAttribute('lang', newLang);
-            langToggle.textContent = newLang === 'zh-CN' ? 'EN' : '中';
-            localStorage.setItem('lang', newLang);
+            applyLang(currentLang === 'zh-CN' ? 'en' : 'zh-CN');
         });
 
         // ========== Dark / Light theme toggle ==========
@@ -1258,27 +1262,65 @@
                 }
             }
 
-            var zh = document.documentElement.getAttribute('lang') === 'zh-CN';
+            var visitorState = { ready: false, ok: false, place: '', ip: '', markers: [] };
+            var mapInited = false;
 
-            // Fallback dot: none
-            function fail() {
-                renderMap([], zh
-                    ? '📍 暂时无法获取访客位置（可能被网络拦截）'
-                    : '📍 Visitor location unavailable (blocked by network)');
+            function isZh() {
+                return document.documentElement.getAttribute('lang') === 'zh-CN';
             }
+
+            function statusHtml() {
+                if (!visitorState.ready) {
+                    return isZh() ? '📍 正在定位当前访客…' : '📍 Locating current visitor…';
+                }
+                if (!visitorState.ok) {
+                    return isZh()
+                        ? '📍 暂时无法获取访客位置（可能被网络拦截）'
+                        : '📍 Visitor location unavailable (blocked by network)';
+                }
+                return isZh()
+                    ? '📍 当前访客来自 <span class="v-loc">' + visitorState.place + '</span> <span class="v-ip">' + visitorState.ip + '</span>'
+                    : '📍 Current visitor from <span class="v-loc">' + visitorState.place + '</span> <span class="v-ip">' + visitorState.ip + '</span>';
+            }
+
+            function updateStatusOnly() {
+                var loc = document.getElementById('visitor-loc');
+                if (loc) loc.innerHTML = statusHtml();
+            }
+
+            function fail() {
+                visitorState.ready = true;
+                visitorState.ok = false;
+                if (!mapInited) {
+                    renderMap([], statusHtml());
+                    mapInited = true;
+                } else {
+                    updateStatusOnly();
+                }
+            }
+
+            window.addEventListener('langchange', updateStatusOnly);
 
             fetch('https://ipwho.is/')
                 .then(function (r) { return r.json(); })
                 .then(function (d) {
                     if (!d || d.success === false || d.latitude == null || d.longitude == null) return fail();
                     var place = [d.city, d.country].filter(Boolean).join(', ') || d.country || '';
-                    var name = place || d.ip;
-                    renderMap(
-                        [{ coords: [d.latitude, d.longitude], name: name, style: { r: 6, fill: '#ff5d7a', stroke: '#fff', 'stroke-width': 2 } }],
-                        (zh
-                            ? '📍 当前访客来自 <span class="v-loc">' + place + '</span> <span class="v-ip">' + d.ip + '</span>'
-                            : '📍 Current visitor from <span class="v-loc">' + place + '</span> <span class="v-ip">' + d.ip + '</span>')
-                    );
+                    visitorState.ready = true;
+                    visitorState.ok = true;
+                    visitorState.place = place;
+                    visitorState.ip = d.ip;
+                    visitorState.markers = [{
+                        coords: [d.latitude, d.longitude],
+                        name: place || d.ip,
+                        style: { r: 6, fill: '#ff5d7a', stroke: '#fff', 'stroke-width': 2 }
+                    }];
+                    if (!mapInited) {
+                        renderMap(visitorState.markers, statusHtml());
+                        mapInited = true;
+                    } else {
+                        updateStatusOnly();
+                    }
                 })
                 .catch(fail);
         })();
