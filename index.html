@@ -553,7 +553,7 @@
         /* ========== Research Interests ========== */
         .research-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 14px;
         }
         .research-card {
@@ -889,8 +889,8 @@
             </div>
             <div class="card">
                 <p class="about-text">
-                    <span class="en-text">I enjoy exploring <strong>operator learning</strong> and <strong>image segmentation / reconstruction</strong>, and I am always happy to discuss them.</span>
-                    <span class="zh-text">我喜欢探索<strong>算子学习</strong>和<strong>图像分割 / 重建</strong>，欢迎大家一起讨论。</span>
+                    <span class="en-text">I enjoy exploring <strong>image segmentation</strong>, <strong>image reconstruction</strong>, and <strong>operator learning</strong>, and I am always happy to discuss them.</span>
+                    <span class="zh-text">我喜欢探索<strong>图像分割</strong>、<strong>图像重建</strong>和<strong>算子学习</strong>，欢迎大家一起讨论。</span>
                 </p>
                 <div class="highlight-box">
                     <span class="en-text"><span class="emoji">📬</span> <strong>Get in touch:</strong> Feel free to reach out via email — looking forward to connecting!</span>
@@ -928,18 +928,18 @@
             <div class="research-grid">
                 <div class="research-card">
                     <div class="rc-icon">🖼️</div>
-                    <div class="rc-tag"><span class="en-text">Image Segmentation / Reconstruction</span><span class="zh-text">图像分割 / 重建</span></div>
-                    <div class="rc-desc"><span class="en-text">Pixel-level segmentation and high-quality image reconstruction with deep networks, covering medical and remote-sensing imagery while balancing accuracy and inference cost</span><span class="zh-text">用深度网络完成像素级目标分割与高质量图像重建，面向医学影像、遥感影像等场景，兼顾精度与推理开销</span></div>
+                    <div class="rc-tag"><span class="en-text">Image Segmentation</span><span class="zh-text">图像分割</span></div>
+                    <div class="rc-desc"><span class="en-text">A foundational computer-vision task that partitions an image into meaningful regions or objects based on color, texture, shape, and semantic cues, enabling fine-grained understanding of image content. Classical methods rely on thresholding, edge detection, and region growing, while deep learning with CNNs and Transformers has become a major research focus and markedly improves accuracy and robustness in complex scenes. It is widely applied in medical imaging, remote sensing, autonomous driving, and industrial defect inspection, supporting downstream recognition, feature extraction, and intelligent decision-making.</span><span class="zh-text">图像分割是计算机视觉领域的一项基础任务，旨在根据图像中不同区域的颜色、纹理、形状及语义特征，将图像划分为具有特定意义的区域或目标，从而实现对图像内容的精细化理解与分析。传统图像分割方法主要依赖阈值分割、边缘检测和区域生长等技术，而随着深度学习的发展，基于卷积神经网络和Transformer的分割方法逐渐成为研究热点，显著提升了复杂场景下的分割精度与鲁棒性。图像分割广泛应用于医学影像分析、遥感图像处理、自动驾驶和工业缺陷检测等领域，为后续的目标识别、特征提取和智能决策提供重要支持。</span></div>
+                </div>
+                <div class="research-card">
+                    <div class="rc-icon">🔄</div>
+                    <div class="rc-tag"><span class="en-text">Image Reconstruction</span><span class="zh-text">图像重建</span></div>
+                    <div class="rc-desc"><span class="en-text">The process of recovering an original or high-quality image from observed measurements via mathematical modeling and computation, aimed at mitigating quality degradation from noise, missing information, undersampling, or imaging-system limits. Traditional approaches draw on inverse-problem theory, regularized optimization, and iterative solvers; deep learning now offers new routes by learning image priors and nonlinear mappings between observations and target images for more efficient, accurate recovery. It is valuable in CT, MRI, super-resolution, denoising, and scientific computing.</span><span class="zh-text">图像重建是指利用采集到的观测数据，通过数学建模与计算方法恢复原始图像或生成高质量图像的过程，其核心目标是解决图像获取过程中由于噪声干扰、信息缺失、采样不足或成像系统限制而导致的图像质量退化问题。传统图像重建方法通常基于逆问题理论、正则化优化和迭代求解算法，而近年来深度学习技术的发展为图像重建提供了新的研究思路，通过学习图像的先验特征及观测数据与目标图像之间的非线性映射关系，实现更加高效、准确的图像恢复。图像重建在计算机断层扫描（CT）、磁共振成像（MRI）、图像超分辨率、图像去噪及科学计算等领域具有广泛的应用价值。</span></div>
                 </div>
                 <div class="research-card">
                     <div class="rc-icon">🔗</div>
-                    <div class="rc-tag"><span class="en-text">Neural Operators</span><span class="zh-text">神经算子</span></div>
-                    <div class="rc-desc"><span class="en-text">Learning the solution operator of parametric PDEs as a map between function spaces (DeepONet, FNO), generalizing across parameters and resolutions</span><span class="zh-text">将参数化偏微分方程的解算子作为函数空间之间的映射加以学习（DeepONet、FNO），可跨参数与分辨率泛化</span></div>
-                </div>
-                <div class="research-card">
-                    <div class="rc-icon">⚡</div>
-                    <div class="rc-tag">CUDA</div>
-                    <div class="rc-desc"><span class="en-text">NVIDIA&apos;s parallel computing platform and API for general-purpose computing on GPUs, widely used to accelerate AI, scientific and high-performance computing</span><span class="zh-text">英伟达推出的并行计算平台与编程接口（GPGPU 的正式名称），广泛用于加速人工智能、科学与高性能计算</span></div>
+                    <div class="rc-tag"><span class="en-text">Operator Learning</span><span class="zh-text">算子学习</span></div>
+                    <div class="rc-desc"><span class="en-text">An emerging paradigm at the intersection of deep learning and scientific computing that learns mappings between function spaces in a data-driven way, approximating complex mathematical operators or physical evolution laws. Unlike conventional networks that map finite-dimensional vectors, operator learning targets function-to-function maps and can, under suitable conditions, adapt across input functions, boundary conditions, and discretizations. Models such as DeepONet and the Fourier Neural Operator (FNO) have advanced PDE solving, field prediction, fluid simulation, and complex-system modeling, enabling fast post-training prediction of system responses and reducing traditional numerical costs while deepening AI–scientific computing integration.</span><span class="zh-text">算子学习是一种结合深度学习与科学计算的新兴研究方法，旨在通过数据驱动的方式学习函数空间之间的映射关系，从而实现对复杂数学算子或物理系统演化规律的高效近似。与传统神经网络主要学习有限维向量之间的映射不同，算子学习关注的是函数到函数的映射，能够在一定条件下适应不同的输入函数、边界条件及离散化方式。近年来，以DeepONet和傅里叶神经算子（Fourier Neural Operator，FNO）为代表的神经算子模型取得了显著进展，为偏微分方程求解、物理场预测、流体力学模拟及复杂系统建模提供了新的技术途径。算子学习能够在训练完成后快速预测不同输入条件下的系统响应，在降低传统数值计算成本、提高计算效率以及推动人工智能与科学计算深度融合方面展现出重要的研究潜力。</span></div>
                 </div>
             </div>
         </section>
